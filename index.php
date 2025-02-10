@@ -20,11 +20,24 @@ if (isset($_SESSION['user_id'])) {
                             </thead>
                             <tbody>
                                 <?php
-                                $query = "SELECT  t.id AS topic_id, t.title AS topic_title, t.topic, t.category,  t.similarity_score, COUNT(v.id) AS total_votes
-                                          FROM topics t
-                                          LEFT JOIN votes v ON t.id = v.topic_id
-                                          GROUP BY t.id, t.title, t.topic, t.category, t.similarity_score
-                                          ORDER BY total_votes DESC;";// Ordena por mayor cantidad de votos
+                                $query = "SELECT 
+                                            t.id AS topic_id,
+                                            t.title AS topic_title,
+                                            t.topic AS topic_category,
+                                            t.category AS general_category,
+                                            t.is_approved,
+                                            COUNT(v.user_id) AS total_votes -- Número total de votos por tema
+                                        FROM 
+                                            topics t
+                                        LEFT JOIN 
+                                            votes v ON t.id = v.topic_id -- Relación de votos con temas
+                                        WHERE 
+                                            t.is_approved = TRUE -- Solo temas aprobados
+                                        GROUP BY 
+                                            t.id, t.title, t.topic, t.category, t.is_approved
+                                        ORDER BY 
+                                            total_votes DESC; -- Ordena por el total de votos de mayor a menor
+                                        ";// Ordena por mayor cantidad de votos
                                 $result = $conexion->query($query);
 
                                 if ($result->num_rows > 0) {

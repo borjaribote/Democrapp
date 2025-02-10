@@ -99,6 +99,6 @@ if (isset($_SESSION['user_id'])) {
             </div>
         </div>
     </section>
-    <?php tester
+    <?php
 }
 require_once BASE_PATH.'includes/footer.php'; ?>

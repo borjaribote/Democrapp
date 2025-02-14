@@ -1,6 +1,6 @@
 <?php
-require_once "conexion.php";
-require_once BASE_PATH.'includes/header.php';
+require_once __DIR__.'/core/init.php';
+require_once BASE_PATH.'/includes/header.php';
 
  
 if (isset($_SESSION['user_id'])) {  
@@ -23,8 +23,7 @@ if (isset($_SESSION['user_id'])) {
                                 $query = "SELECT 
                                             t.id AS topic_id,
                                             t.title AS topic_title,
-                                            t.topic AS topic_category,
-                                            t.category AS general_category,
+                                            t.topic AS topic,
                                             t.is_approved,
                                             COUNT(v.user_id) AS total_votes -- Número total de votos por tema
                                         FROM 
@@ -34,7 +33,7 @@ if (isset($_SESSION['user_id'])) {
                                         WHERE 
                                             t.is_approved = TRUE -- Solo temas aprobados
                                         GROUP BY 
-                                            t.id, t.title, t.topic, t.category, t.is_approved
+                                            t.id, t.title, t.topic, t.is_approved
                                         ORDER BY 
                                             total_votes DESC; -- Ordena por el total de votos de mayor a menor
                                         ";// Ordena por mayor cantidad de votos
@@ -44,8 +43,8 @@ if (isset($_SESSION['user_id'])) {
                                     while ($row = $result->fetch_assoc()) {
                                         echo "<tr>";
                                         echo "<td>" . htmlspecialchars($row['topic']) . "</td>";
-/*                                         echo "<td>" . htmlspecialchars($row['votos']) . "</td>";
- */                                        echo "</tr>";
+                                        echo "<td>" . htmlspecialchars($row['total_votes']) . "</td>";
+                                        echo "</tr>";
                                     }
                                 } else {
                                     echo "<tr><td colspan='2' class='text-center'>No hay temas disponibles</td></tr>";
@@ -68,7 +67,7 @@ if (isset($_SESSION['user_id'])) {
                 <div class="card mt-5 p-3">
                     <div class="card-body">
                         <h2 class="card-title text-center">Login</h2>
-                        <form action="acciones/login.php" method="post" onsubmit="return usedEmail(event, this)">
+                        <form action="<?= BASE_URL ?>functions/user_auth.php" method="post" onsubmit="return usedEmail(event, this)">
                             <input type="hidden" name="action" value="login">
                             <div class="mb-3">
                                 <label for="email" class="form-label">correo:</label>
@@ -91,7 +90,7 @@ if (isset($_SESSION['user_id'])) {
                           
                             <button type="submit" class="btn btn-primary w-100">Login</button>
                           <!--   <div class="mt-3 d-flex justify-content-between align-items-end">
-                                <a class="primary" href="/registro.php">Registrate</a>
+                                <a class="primary" href="page/registro.php">Registrate</a>
                             </div> -->
                         </form>
                     </div>
@@ -101,4 +100,4 @@ if (isset($_SESSION['user_id'])) {
     </section>
     <?php
 }
-require_once BASE_PATH.'includes/footer.php'; ?>
+require_once BASE_PATH.'/includes/footer.php'; ?>

@@ -1,6 +1,6 @@
 <?php
-require_once "conexion.php";
-require_once BASE_PATH.'includes/header.php';
+require_once '../core/init.php';
+require_once BASE_PATH.'/includes/header.php';
 ?>
 
 <section class="container">
@@ -9,7 +9,7 @@ require_once BASE_PATH.'includes/header.php';
                 <div class="card mt-5 p-3">
                     <div class="card-body">
                         <h2 class="card-title text-center">Formulario de registro</h2>
-                        <form action="acciones/usuarios.php" method="post" onsubmit="return usedEmail(event, this)">
+                        <form action="<?= BASE_URL ?>controladores/controlador_usuarios.php" method="post" onsubmit="return usedEmail(event, this)">
                             <input type="hidden" name="action" value="insert">
                             <div class="mb-3">
                                 <label for="name" class="form-label">Nombre:</label>
@@ -32,4 +32,4 @@ require_once BASE_PATH.'includes/header.php';
         </div>
     </section>
 
-<?php require_once BASE_PATH.'includes/footer.php'; ?>
+<?php require_once BASE_PATH.'/includes/footer.php'; ?>

@@ -1,7 +1,5 @@
-
 <?php
-session_start();
-require_once '../conexion.php'; 
+require_once '../core/init.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = isset($_POST['action']) ? $_POST['action'] : '';
@@ -18,8 +16,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         default:
             echo "Acción no válida.";
     }
-} else {
-    echo "Método de solicitud no válido.";
 }
 
 function insertarUsuario($data) {

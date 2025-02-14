@@ -1,11 +1,21 @@
 const base_url = document.body.getAttribute("data-baseurl");
 addEventListener("DOMContentLoaded", () => {
-    const emailInputs = document.querySelectorAll("[name='email']");
-    emailInputs.forEach(emailInput => {
+
+    document.querySelectorAll("#rondasTabs .nav-link").forEach(link => {
+        link.addEventListener("click", function () {
+            createCookie(this, "rondas");
+        });
+    }); 
+    document.querySelectorAll("#temasTabs .nav-link").forEach(link => {
+        link.addEventListener("click", function () {
+            createCookie(this, "temas");
+        });
+    }); 
+    document.querySelectorAll("[name='email']").forEach(emailInput => {
         emailInput.addEventListener("change", function () {
             validEmailPattern(emailInput);
         });
-    });
+    });      
 });
 
 function usedEmail(event, form) {
@@ -13,7 +23,7 @@ function usedEmail(event, form) {
     const emailInput = form.querySelector("[name='email']");
     const email = emailInput.value.trim();
     if (email.length > 5) {
-        fetch(base_url + "acciones/verificar_email.php", {
+        fetch(base_url + "functions/verificar_email.php", {
             method: "POST",
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
             body: "email=" + encodeURIComponent(email)
@@ -54,4 +64,19 @@ function validEmailPattern(email) {
         email.setCustomValidity("");
         email.classList.remove("is-invalid");
     }
+}
+function createCookie (element, page) {
+    let tab = element.hash.slice(1);
+    fetch(base_url + "functions/crear_cookie.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: "tab=" + encodeURIComponent(tab) + "&page=" + encodeURIComponent(page)
+    })
+    .then(response => response.text())
+    .then(data => {
+        console.log(data);
+    })
+    .catch(error => {
+        console.error("Error en la creación de la cookie:", error);
+    });
 }

@@ -1,5 +1,5 @@
 <?php
-require_once "../conexion.php";
+require_once '../core/init.php';
 global $conexion;
 
 if (isset($_POST['email'])) {

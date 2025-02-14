@@ -1,6 +1,6 @@
-<footer>
+<footer class="mt-auto bg-dark text-white text-center py-3">
 <div class="text-center">
-    <p class="mt-3">&copy; <?php echo date("Y"); ?> VoteCounter. All rights reserved.</p>
+    <p class="mt-3">&copy; <?php echo date("Y"); ?> Democrapp. All rights reserved.</p>
 </div>
 </footer>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>

@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS rounds (
     stage VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,  -- Nombre de la fase en la que está la ronda
     start_date DATETIME, -- Fecha de inicio de la ronda
     end_date DATETIME, -- Fecha de finalización de la ronda
-    status ENUM('active', 'inactive', 'finished') CHARACTER SET utf8 COLLATE utf8_bin DEFAULT 'inactive', -- Estado de la ronda
+    status ENUM('active', 'inactive', 'finished') DEFAULT 'inactive', -- Estado de la ronda
     topics_per_round INT DEFAULT 10, -- Número máximo de temas por ronda
     votes_per_user INT DEFAULT 1 -- Número de votos que puede emitir cada usuario en la ronda
 ) CHARACTER SET utf8 COLLATE utf8_bin;
@@ -30,9 +30,10 @@ CREATE TABLE IF NOT EXISTS rounds (
 -- Crear la tabla de temas (topics)
 CREATE TABLE IF NOT EXISTS topics (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    title VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL, -- Título del tema
-    topic VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL, -- Categoría principal del tema
-    category VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT 'Uncategorized', -- Categoría general del tema
+    user_id INT NOT NULL, -- ID del usuario que propuso el tema 
+    title VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL, -- Título generada por IA
+    topic VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL, -- Tema propuesto por el usuario
+    description VARCHAR(255) CHARACTER SET utf8 TEXT NULL, -- Descripción opcional del tema
     similarity_score FLOAT DEFAULT 0, -- Puntaje de similitud con otros temas (0-1)
     similar_to TEXT NULL, -- IDs de los temas similares separados por comas
     is_approved BOOLEAN DEFAULT FALSE, -- Indica si el tema ha sido aprobado por un administrador
@@ -55,7 +56,11 @@ CREATE TABLE IF NOT EXISTS votes (
     PRIMARY KEY (user_id, topic_id, round_id) -- Clave primaria compuesta para evitar votos duplicados
 ) CHARACTER SET utf8 COLLATE utf8_bin;
 
--- Agregar claves foráneas con ALTER TABLE (mejor legibilidad)
+-- Agregar claves foráneas con ALTER TABLE 
+ALTER TABLE topics 
+ADD CONSTRAINT FK_topics_user FOREIGN KEY (user_id)
+REFERENCES users(id) ON DELETE CASCADE; -- Si el usuario se borra, sus temas también se eliminan
+
 ALTER TABLE topic_rounds 
 ADD CONSTRAINT FK_topic_rounds_topic FOREIGN KEY (topic_id)
 REFERENCES topics(id) ON DELETE CASCADE;
@@ -80,9 +85,9 @@ REFERENCES rounds(id) ON DELETE CASCADE;
 CREATE OR REPLACE VIEW topic_votes AS
 SELECT 
     topics.id AS topic_id,
+    topics.user_id, -- NUEVO: Muestra qué usuario propuso el tema
     topics.title AS topic_title,
     topics.topic,
-    topics.category,
     rounds.stage AS stage,
     topics.similarity_score,
     topics.similar_to,
@@ -90,7 +95,7 @@ SELECT
 FROM 
     topics
 LEFT JOIN 
-    topic_rounds ON topics.id = topic_rounds.topic_id -- Relación entre temas y rondas
+    topic_rounds ON topics.id = topic_rounds.topic_id 
 LEFT JOIN 
     rounds ON topic_rounds.round_id = rounds.id
 LEFT JOIN 
@@ -98,8 +103,8 @@ LEFT JOIN
 WHERE 
     topics.is_approved = TRUE -- Solo incluir temas aprobados
 GROUP BY 
-    topics.id, topics.title, topics.topic, topics.category, rounds.stage, 
-    topics.similarity_score, topics.similar_to;
+    topics.id, topics.user_id, topics.title, topics.topic, topics.similarity_score, 
+    topics.similar_to, rounds.stage; 
 
 -- Crear índices para optimización de consultas
 CREATE INDEX idx_users_email ON users(email);
@@ -107,11 +112,30 @@ CREATE INDEX idx_votes_user ON votes(user_id);
 CREATE INDEX idx_votes_topic ON votes(topic_id);
 CREATE INDEX idx_topics_similar_to ON topics(similar_to);
 CREATE INDEX idx_topics_approved ON topics(is_approved);
-CREATE INDEX idx_topic_rounds ON topic_rounds(topic_id, round_id);
+CREATE INDEX idx_topic_rounds ON topic_rounds(topic_id, round_id);                                                                                                                                    
+-- EVENTO PARA FINALIZAR RONDAS AUTOMÁTICAMENTE A LAS 00:00
+DELIMITER $$
 
+CREATE EVENT IF NOT EXISTS finalizar_rondas
+ON SCHEDULE EVERY 1 DAY 
+STARTS TIMESTAMP(CURRENT_DATE + INTERVAL 1 DAY, '00:00:00')
+DO
+BEGIN
+    -- Cambiar a 'finished' todas las rondas activas cuya fecha fin ya pasó
+    UPDATE rounds
+    SET status = 'finished'
+    WHERE status = 'active' AND end_date <= NOW();
+END$$
+
+DELIMITER ;
+
+-- ACTIVAR EVENTOS SI NO ESTÁN ACTIVOS
+SET GLOBAL event_scheduler = ON;
 -- Insertar un administrador si no existe
 INSERT INTO users (username, email, password_hash, is_admin, registration_date)
-SELECT 'Admin', 'admin@democrapp.com', MD5('admin123'), TRUE, NOW()
+SELECT 'Admin', 'admin@democrapp.com', 
+    '$2y$10$vWZ5VLcQvp5IlprUsKt6Gud7Vo0msdU8ClR14Fux24xz336zlZ54e', -- Password: admin123
+    TRUE, NOW()
 WHERE NOT EXISTS (
     SELECT 1 FROM users WHERE email = 'admin@democrapp.com' AND is_admin = TRUE
 );

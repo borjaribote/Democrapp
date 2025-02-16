@@ -1,10 +1,11 @@
 <?php
 require_once __DIR__.'/core/init.php';
 require_once BASE_PATH.'/includes/header.php';
-
- 
+require_once BASE_PATH.'/functions/gestion_mensajes.php';   ?>
+<?php
 if (isset($_SESSION['user_id'])) {  
    ?>
+  
     <section class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
@@ -70,12 +71,12 @@ if (isset($_SESSION['user_id'])) {
                         <form action="<?= BASE_URL ?>functions/user_auth.php" method="post" onsubmit="return usedEmail(event, this)">
                             <input type="hidden" name="action" value="login">
                             <div class="mb-3">
-                                <label for="email" class="form-label">correo:</label>
+                                <label for="email" class="form-label">correo</label>
                                 <input type="email" id="correo" name="email" class="form-control" required>
                             </div>
                             
                             <div class="mb-3">
-                                <label for="password" class="form-label">Password:</label>
+                                <label for="password" class="form-label">Password</label>
                                 <?php
                                 if (isset($_SESSION['error_message'])) {
                                     echo '<input type="password" id="password" name="password" class="form-control is-invalid" required>';

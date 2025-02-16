@@ -1,5 +1,6 @@
 <?php
-require_once '../core/init.php';
+require_once '../../core/init.php';
+accesoAutorizado('publico');
 require_once BASE_PATH.'/includes/header.php';
 ?>
 
@@ -12,15 +13,15 @@ require_once BASE_PATH.'/includes/header.php';
                         <form action="<?= BASE_URL ?>controladores/controlador_usuarios.php" method="post" onsubmit="return usedEmail(event, this)">
                             <input type="hidden" name="action" value="insert">
                             <div class="mb-3">
-                                <label for="name" class="form-label">Nombre:</label>
+                                <label for="name" class="form-label required">Nombre</label>
                                 <input type="text" id="name" name="username" class="form-control" required>
                             </div>
                             <div class="mb-3">
-                                <label for="email" class="form-label">Correo:</label>
+                                <label for="email" class="form-label required">Correo</label>
                                 <input type="email" id="register_email" name="email" class="form-control" required>
                             </div>
                             <div class="mb-3">
-                                <label for="password" class="form-label">Contraseña:</label>
+                                <label for="password" class="form-label required">Contraseña</label>
                                 <input type="password" id="password" name="password" class="form-control" required>
                             </div>
                             <button type="submit" class="btn btn-primary w-100">Registrate</button>

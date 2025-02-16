@@ -24,14 +24,15 @@ function insertarRonda($data) {
     global $conexion;
 
     $name = $data['name'];
+    $stage = $data['stage'];
     $start_date = $data['start_date'];
     $end_date = $data['end_date'];
     $status = 'inactive'; // Estado por defecto
 
     // Insertar la nueva ronda
-    $sql = "INSERT INTO rounds (name, start_date, end_date, status) VALUES (?, ?, ?, ?)";
+    $sql = "INSERT INTO rounds (name, stage, start_date, end_date, status) VALUES (?, ?, ?, ?, ?)";
     $stmt = $conexion->prepare($sql);
-    $stmt->bind_param("ssss", $name, $start_date, $end_date, $status);
+    $stmt->bind_param("sssss", $name, $stage, $start_date, $end_date, $status);
 
     if ($stmt->execute()) {
         $round_id = $stmt->insert_id; // Obtener el ID de la ronda creada

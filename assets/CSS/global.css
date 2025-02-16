@@ -1,4 +1,4 @@
-/* Global CSS */
+/* Global css */
  * {
     box-sizing: border-box;
     margin: 0;
@@ -9,7 +9,7 @@
     height: 100%;
     display: flex;
     flex-direction: column;
-    font-family: Arial, sans-serif;
+    font-family: 'Lato' !important;
     line-height: 1.6;
     color: #333;
 }
@@ -22,9 +22,34 @@
     font-weight: normal;
     font-style: normal;
 }
+.lato-regular {
+    font-family: "Lato", serif;
+    font-weight: 400;
+    font-style: normal;
+  }
+@font-face {
+    font-family: 'Greek';
+    src: url('../fonts/heorot.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Greek_outline';
+    src: url('../fonts/heorots.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.fa, .fa-brands, .fa-duotone, .fa-light, .fa-regular, .fa-solid, .fa-thin, .fab, .fad, .fal, .far, .fas, .fat {
+    margin:5px;
+}
+/*Nav*/
+.navbar .greek{
+    font-family: 'Greek' !important;
+    font-size: 1.5em;
+}
 /* Footer */
 footer {
-    
     color: white;
     padding: 10px;
     width: 100%;
@@ -39,7 +64,11 @@ a:hover {
 a{
     text-decoration: none;
 }
-
+/*Forms*/
+  .required:after {
+    content:" *";
+    color: red;
+  }
 /*404*/
 
 #error_page h1 {

@@ -25,17 +25,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 function insertarTema($data) {
     global $conexion;
     $topic = $data['topic'];
+    $description = $data['description'];
     $title = generarTituloGlobalCohere($topic); 
     echo $title;
-    $sql = "INSERT INTO topics (user_id, title, topic) VALUES (?, ?, ?)";
+    $sql = "INSERT INTO topics (user_id, title, topic, description) VALUES (?, ?, ?, ?)";
     $stmt = $conexion->prepare($sql);
-    $stmt->bind_param("iss", $_SESSION['user_id'], $title, $topic);
+    $stmt->bind_param("isss", $_SESSION['user_id'], $title, $topic, $description);
         
 
 
     if ($stmt->execute()) {
-        $_SESSION['new_topic'] = $topic;
-        header("Location: " . BASE_URL . "pages/temas.php");
+        header("Location: " . BASE_URL . "pages/temas.php?mensaje=tema_registrado&value=$topic");
         exit();  
     } else {
         echo "Error al registrar tema: " . $conexion->error;
@@ -124,17 +124,17 @@ function consultarTemasAprobados() {
     
     return $temas;
 }
-
 function consultarTemasPendientes() {
     global $conexion;
-    $order_by = "created_at DESC"; 
-
-    if (isset($_GET['order'])) {
-        $allowed_columns = ["title", "topic", "created_at"];
-        $order = in_array($_GET['order'], $allowed_columns) ? $_GET['order'] : "created_at";
-        $order_by = "$order ASC";
-    }
     
+    $order_by = "created_at DESC"; 
+    $allowed_columns = ["title", "topic", "created_at"];
+    $allowed_directions = ["ASC", "DESC"];
+    $order = isset($_GET['order']) && in_array($_GET['order'], $allowed_columns) ? $_GET['order'] : "created_at";
+    $direction = isset($_GET['direction']) && in_array($_GET['direction'], $allowed_directions) ? $_GET['direction'] : "DESC";
+    $new_direction = ($direction === "ASC") ? "DESC" : "ASC";
+    $order_by = "$order $direction";
+
     $sql = "SELECT id, title, topic, created_at FROM topics WHERE is_approved = FALSE ORDER BY $order_by";
     $result = $conexion->query($sql);
     
@@ -144,7 +144,8 @@ function consultarTemasPendientes() {
             $temas[] = $row;
         }
     }
-    
-    return $temas;
+
+    return [$temas, $new_direction]; // Retornamos también la nueva dirección
 }
+
 ?>

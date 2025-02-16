@@ -1,3 +1,5 @@
+
+
 -- Crear la base de datos con codificación UTF-8 BIN
 CREATE DATABASE IF NOT EXISTS DemocrApp 
 DEFAULT CHARACTER SET utf8 
@@ -30,10 +32,10 @@ CREATE TABLE IF NOT EXISTS rounds (
 -- Crear la tabla de temas (topics)
 CREATE TABLE IF NOT EXISTS topics (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL, -- ID del usuario que propuso el tema 
+    user_id INT DEFAULT NULL, -- ID del usuario que propuso el tema (ahora permite NULL)
     title VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL, -- Título generada por IA
     topic VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL, -- Tema propuesto por el usuario
-    description VARCHAR(255) CHARACTER SET utf8 TEXT NULL, -- Descripción opcional del tema
+    description TEXT NULL, -- Descripción opcional del tema
     similarity_score FLOAT DEFAULT 0, -- Puntaje de similitud con otros temas (0-1)
     similar_to TEXT NULL, -- IDs de los temas similares separados por comas
     is_approved BOOLEAN DEFAULT FALSE, -- Indica si el tema ha sido aprobado por un administrador
@@ -49,17 +51,17 @@ CREATE TABLE IF NOT EXISTS topic_rounds (
 
 -- Crear la tabla de votos (evita votos duplicados del mismo usuario en un mismo tema y ronda)
 CREATE TABLE IF NOT EXISTS votes (
-    user_id INT NOT NULL, -- ID del usuario que vota
+    user_id INT DEFAULT NULL, -- ID del usuario que vota (ahora permite NULL)
     topic_id INT NOT NULL, -- ID del tema votado
     round_id INT NOT NULL, -- ID de la ronda donde se emitió el voto
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP, -- Fecha del voto
-    PRIMARY KEY (user_id, topic_id, round_id) -- Clave primaria compuesta para evitar votos duplicados
+    PRIMARY KEY (topic_id, round_id) -- Clave primaria sin user_id
 ) CHARACTER SET utf8 COLLATE utf8_bin;
 
 -- Agregar claves foráneas con ALTER TABLE 
 ALTER TABLE topics 
 ADD CONSTRAINT FK_topics_user FOREIGN KEY (user_id)
-REFERENCES users(id) ON DELETE CASCADE; -- Si el usuario se borra, sus temas también se eliminan
+REFERENCES users(id) ON DELETE SET NULL; -- Ahora los temas no se eliminan, solo se deja user_id como NULL
 
 ALTER TABLE topic_rounds 
 ADD CONSTRAINT FK_topic_rounds_topic FOREIGN KEY (topic_id)
@@ -71,7 +73,7 @@ REFERENCES rounds(id) ON DELETE CASCADE;
 
 ALTER TABLE votes 
 ADD CONSTRAINT FK_votes_user FOREIGN KEY (user_id)
-REFERENCES users(id) ON DELETE CASCADE;
+REFERENCES users(id) ON DELETE SET NULL; -- Ahora los votos no se eliminan, solo se deja user_id como NULL
 
 ALTER TABLE votes 
 ADD CONSTRAINT FK_votes_topic FOREIGN KEY (topic_id)
@@ -85,7 +87,7 @@ REFERENCES rounds(id) ON DELETE CASCADE;
 CREATE OR REPLACE VIEW topic_votes AS
 SELECT 
     topics.id AS topic_id,
-    topics.user_id, -- NUEVO: Muestra qué usuario propuso el tema
+    topics.user_id, -- Muestra qué usuario propuso el tema (puede ser NULL si fue eliminado)
     topics.title AS topic_title,
     topics.topic,
     rounds.stage AS stage,
@@ -113,6 +115,7 @@ CREATE INDEX idx_votes_topic ON votes(topic_id);
 CREATE INDEX idx_topics_similar_to ON topics(similar_to);
 CREATE INDEX idx_topics_approved ON topics(is_approved);
 CREATE INDEX idx_topic_rounds ON topic_rounds(topic_id, round_id);                                                                                                                                    
+
 -- EVENTO PARA FINALIZAR RONDAS AUTOMÁTICAMENTE A LAS 00:00
 DELIMITER $$
 
@@ -131,6 +134,7 @@ DELIMITER ;
 
 -- ACTIVAR EVENTOS SI NO ESTÁN ACTIVOS
 SET GLOBAL event_scheduler = ON;
+
 -- Insertar un administrador si no existe
 INSERT INTO users (username, email, password_hash, is_admin, registration_date)
 SELECT 'Admin', 'admin@democrapp.com', 

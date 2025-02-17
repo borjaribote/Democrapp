@@ -1,6 +1,8 @@
 <?php
-require_once '../core/init.php';
-
+if (!defined('INIT_LOADED')) {
+    define('INIT_LOADED', true);
+    require_once __DIR__ . '/../core/init.php';
+}
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = isset($_POST['action']) ? $_POST['action'] : '';
 
@@ -46,7 +48,7 @@ function insertarRonda($data) {
                 $stmtTopic->execute();
             }
         }
-        header("Location: " . BASE_URL . "pages/administrar_rondas.php");
+        header("Location: " . BASE_URL . "pages/rondas/administrar_rondas.php");
         exit();
     } else {
         echo "Error al registrar la ronda: " . $conexion->error;
@@ -64,7 +66,7 @@ function actualizarRonda($id, $status) {
     $stmt->bind_param("si", $status, $id);
 
     if ($stmt->execute()) {
-        header("Location: " . BASE_URL . "pages/administrar_rondas.php");
+        header("Location: " . BASE_URL . "pages/rondas/administrar_rondas.php");
         exit();
     } else {
         echo "Error al actualizar la ronda.";
@@ -82,7 +84,7 @@ function eliminarRonda($id) {
     $stmt->bind_param("i", $id);
 
     if ($stmt->execute()) {
-        header("Location: " . BASE_URL . "pages/administrar_rondas.php");
+        header("Location: " . BASE_URL . "pages/rondas/administrar_rondas.php");
         exit();
     } else {
         echo "Error al eliminar la ronda.";

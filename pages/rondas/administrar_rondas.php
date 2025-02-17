@@ -1,10 +1,8 @@
 <?php
-require_once '../core/init.php';
+require_once '../../includes/header.php';
 accesoAutorizado("admin");
 require_once  BASE_PATH.'/controladores/controlador_rondas.php';
 require_once  BASE_PATH.'/controladores/controlador_temas.php';
-require_once BASE_PATH.'/includes/header.php';
-
 $temas = consultarTemasAprobados();
 $activeTab = isset($_COOKIE["rondas_tab"]) ? json_decode($_COOKIE["rondas_tab"], true)["tab"] : "nueva"; 
 ?>

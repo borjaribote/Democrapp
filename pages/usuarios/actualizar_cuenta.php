@@ -1,7 +1,6 @@
 <?php
-require_once '../../core/init.php';
+require_once '../../includes/header.php';
 accesoAutorizado('usuario');
-require_once BASE_PATH.'includes/header.php';
 require_once BASE_PATH.'controladores/controlador_usuarios.php';
 require_once BASE_PATH.'/functions/gestion_mensajes.php';
 // Obtener datos del usuario

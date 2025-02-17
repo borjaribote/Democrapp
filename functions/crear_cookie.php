@@ -1,5 +1,8 @@
 <?php
-require_once '../core/init.php';
+if (!defined('INIT_LOADED')) {
+    define('INIT_LOADED', true);
+    require_once __DIR__ . '/../core/init.php';
+}
 
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["tab"])) {
     $tab = $_POST["tab"];

@@ -1,9 +1,9 @@
 <?php
-/* require_once '../core/init.php';
- */if (!defined('INIT_LOADED')) {
+if (!defined('INIT_LOADED')) {
     define('INIT_LOADED', true);
     require_once __DIR__ . '/../core/init.php';
 }
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = isset($_POST['action']) ? $_POST['action'] : '';
     switch ($action) {
@@ -56,7 +56,7 @@ function actualizarUsuario($data) {
         $sql = "UPDATE users SET is_admin = ? WHERE id = ?";
         $stmt = $conexion->prepare($sql);
         $stmt->bind_param("ii", $data['is_admin'], $id);
-        $location = "/pages/administrar_usuarios.php?mensaje=admin_actualizado";
+        $location = "/pages/usuarios/administrar_usuarios.php?mensaje=admin_actualizado";
     }else{
         $sql = "UPDATE users SET username = ?, email = ? WHERE id = ?";
         $stmt = $conexion->prepare($sql);
@@ -79,8 +79,8 @@ function eliminarUsuario($data) {
     $page = $data['page'];
     $id = $data['id'];
     $session=null;
-    if ($page=="administrar_usuarios"){
-        $location = "/pages/administrar_usuarios.php?mensaje=cuenta_eliminada&value=$email";
+    if ($page=="usuarios/administrar_usuarios"){
+        $location = "/pages/usuarios/administrar_usuarios.php?mensaje=cuenta_eliminada&value=$email";
     }else if($page == "actualizar_cuenta"){
         $location = "index.php?mensaje=cuenta_eliminada&value=$email";
     }
@@ -89,8 +89,8 @@ function eliminarUsuario($data) {
     $stmt->bind_param("i", $id);
 
     if ($stmt->execute()) {
-        if ($page=="administrar_usuarios"){
-            $location = "/pages/administrar_usuarios.php?mensaje=cuenta_eliminada&value=$email";
+        if ($page=="usuarios/administrar_usuarios"){
+            $location = "/pages/usuarios/administrar_usuarios.php?mensaje=cuenta_eliminada&value=$email";
         }else if($page == "actualizar_cuenta"){
             session_destroy(); 
             $_SESSION = [];

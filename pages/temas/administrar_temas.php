@@ -1,7 +1,6 @@
 <?php
-require_once '../core/init.php';
+require_once '../../includes/header.php';
 accesoAutorizado("admin");
-require_once BASE_PATH.'/includes/header.php';
 require_once BASE_PATH.'/controladores/controlador_temas.php';
 //Verificar cookie para mantener la misma pestaña activa
 $activeTab = isset($_COOKIE["temas_tab"]) ? json_decode($_COOKIE["temas_tab"], true)["tab"] : "nueva"; // Por defecto "nueva"

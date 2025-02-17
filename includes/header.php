@@ -1,4 +1,8 @@
 <?php
+if (!defined('INIT_LOADED')) {
+    define('INIT_LOADED', true);
+    require_once __DIR__ . '/../core/init.php';
+}
 ?>
 
 <!DOCTYPE html>
@@ -31,7 +35,7 @@
                     </li>
                     <?php if(isset($_SESSION['user_id'])): ?>
                         <li class="nav-item">
-                            <a class="nav-link" href="<?= BASE_URL ?>pages/temas.php">Mis temas</a>
+                            <a class="nav-link" href="<?= BASE_URL ?>pages/temas/mis_temas.php">Mis temas</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="<?= BASE_URL ?>pages/usuarios/actualizar_cuenta.php">Mi cuenta</a>
@@ -43,9 +47,9 @@
                             Admin
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="adminDropdown">
-                            <li><a class="dropdown-item" href="<?= BASE_URL ?>pages/administrar_temas.php">Administrar temas</a></li>
-                            <li><a class="dropdown-item" href="<?= BASE_URL ?>pages/administrar_rondas.php">Administrar rondas</a></li>
-                            <li><a class="dropdown-item" href="<?= BASE_URL ?>pages/administrar_usuarios.php">Administrar usuarios</a></li>
+                            <li><a class="dropdown-item" href="<?= BASE_URL ?>pages/temas/administrar_temas.php">Administrar temas</a></li>
+                            <li><a class="dropdown-item" href="<?= BASE_URL ?>pages/rondas/administrar_rondas.php">Administrar rondas</a></li>
+                            <li><a class="dropdown-item" href="<?= BASE_URL ?>pages/usuarios/administrar_usuarios.php">Administrar usuarios</a></li>
                        </ul>
                     </li>
                     <?php endif; ?>

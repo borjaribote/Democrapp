@@ -1,7 +1,6 @@
 <?php
-require_once '../core/init.php';
+require_once '../../includes/header.php';
 accesoAutorizado("usuario");
-require_once BASE_PATH.'/includes/header.php';
 require_once BASE_PATH.'/controladores/controlador_usuarios.php';
 require_once BASE_PATH.'/functions/gestion_mensajes.php';
 
@@ -45,7 +44,7 @@ $result = consultarUsuarios($search);
                                         <form action="<?= BASE_URL ?>controladores/controlador_usuarios.php" method="post" onsubmit="return confirm('¿Seguro que deseas eliminar este usuario?');">
                                             <input type="hidden" name="action" value="delete">
                                             <input type="hidden" name="email" value="<?= $row['username'] ?>">
-                                            <input type="hidden" name="page" value="administrar_usuarios">
+                                            <input type="hidden" name="page" value="usuarios/administrar_usuarios">
                                             <input type="hidden" name="id" value="<?= $row['id'] ?>">
                                             <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
                                         </form>

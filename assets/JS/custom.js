@@ -15,14 +15,27 @@ addEventListener("DOMContentLoaded", () => {
         emailInput.addEventListener("change", function () {
             validEmailPattern(emailInput);
         });
-    }); 
+        emailInput.addEventListener("input", function () {
+            validEmailPattern(emailInput);
+        });
+    });
     
-    setupAdminModal('confirmAdminModal');
-
+    
+    if (document.getElementById("confirmAdminModal")) {
+        setupAdminModal(document.getElementById("confirmAdminModal"));
+    }
+    if (document.getElementById("enableEdit")) {
+        userUpdate(document.getElementById("enableEdit"));
+    }
+    if (document.getElementById("viewTopicInfo")) {
+        viewTopicInfo(document.getElementById("viewTopicInfo"));
+    }
    
 });
 
+/*Validación de correo */
 function usedEmail(event, form) {
+    debugger;
     event.preventDefault();
     const emailInput = form.querySelector("[name='email']");
     const email = emailInput.value.trim();
@@ -56,19 +69,18 @@ function usedEmail(event, form) {
 }
 
 function validEmailPattern(email) {
-    let pattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
-    if (!email.value.match(pattern) || email.value.length === 0) {
+    let pattern = /^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i; // Permite dominios de más de 3 letras y no usa espacios
+
+    if (!pattern.test(email.value)) { // Verifica si el correo es válido
         email.setCustomValidity("Por favor, ingrese un email válido en el formato: ejemplo@dominio.com");
         email.classList.add("is-invalid");
-        email.addEventListener("input", function () {
-            validEmailPattern(email);
-            email.setCustomValidity("Por favor, ingrese un email válido en el formato: ejemplo@dominio.com");
-        });
     } else {
         email.setCustomValidity("");
         email.classList.remove("is-invalid");
     }
 }
+
+/*Crear Cookie para pestañas en temas y rondas */
 function createCookie (element, page) {
     let tab = element.hash.slice(1);
     fetch(base_url + "functions/crear_cookie.php", {
@@ -86,8 +98,8 @@ function createCookie (element, page) {
 }
 
 /* actualizar datos usuario */
-
-document.getElementById("enableEdit").addEventListener("change", function() {
+function userUpdate(element){
+    element.addEventListener("change", function() {
     let isEnabled = this.checked;
 
     document.getElementById("name").disabled = !isEnabled;
@@ -97,38 +109,55 @@ document.getElementById("enableEdit").addEventListener("change", function() {
     document.getElementById("user_delete").disabled = !isEnabled;
 });
 
+}
+
+/*Modal de confirmación para dar o quitar permisos administrador a un usuario */
+function setupAdminModal(modal) {
+
+    modal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget;
+        var userId = button.getAttribute('data-userid');
+        var username = button.getAttribute('data-username');
+        var isAdmin = button.getAttribute('data-isadmin');
+
+        // Actualizar el nombre del usuario en el modal
+        document.getElementById('modalUserId').value = userId;
+        document.getElementById('modalIsAdmin').value = isAdmin;
+        document.getElementById('modalIsAdmin').value = isAdmin == 1 ? 0 : 1;
 
 
-    function setupAdminModal(modalId) {
-        var modal = document.getElementById(modalId);
+        // Modificar el mensaje según la acción
+        if (isAdmin == 1) {
+            document.getElementById('modalMessage').innerHTML =
+                "¿Estás seguro de que deseas quitar los permisos de administrador a <strong>" + username + "</strong>?";
+            document.getElementById('modalWarning').innerHTML =
+                "Esta acción revocará sus privilegios de administrador, impidiendo que gestione usuarios, modifique contenido y realice cambios en la configuración. Asegúrate de que esta es la decisión correcta antes de continuar.";
+            document.getElementById('modalConfirmButton').textContent = "Sí, quitar permisos de administrador";
+        } else {
+            document.getElementById('modalMessage').innerHTML =
+                "¿Estás seguro de que deseas hacer administrador a <strong>" + username + "</strong>?";
+            document.getElementById('modalWarning').innerHTML =
+                "Otorgar permisos de administrador a este usuario le dará control total sobre la aplicación, incluyendo la gestión de usuarios, modificaciones de contenido y ajustes críticos del sistema. Asegúrate de confiar plenamente en esta persona antes de continuar.";
+            document.getElementById('modalConfirmButton').textContent = "Sí, hacer administrador";
+        }
+    });
+}
 
-        modal.addEventListener('show.bs.modal', function (event) {
-            var button = event.relatedTarget;
-            var userId = button.getAttribute('data-userid');
-            var username = button.getAttribute('data-username');
-            var isAdmin = button.getAttribute('data-isadmin');
+function viewTopicInfo(modal) {
 
-            // Actualizar el nombre del usuario en el modal
-            document.getElementById('modalUserId').value = userId;
-            document.getElementById('modalIsAdmin').value = isAdmin;
-            document.getElementById('modalIsAdmin').value = isAdmin == 1 ? 0 : 1;
+    modal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget;
 
+        var title = button.getAttribute('data-topic-title');  
+        var created_at = button.getAttribute('data-topic-date');
+        var topic = button.getAttribute('data-topic-topic');
+        var description = button.getAttribute('data-topic-description');
 
-            // Modificar el mensaje según la acción
-            if (isAdmin == 1) {
-                document.getElementById('modalMessage').innerHTML =
-                    "¿Estás seguro de que deseas quitar los permisos de administrador a <strong>" + username + "</strong>?";
-                document.getElementById('modalWarning').innerHTML =
-                    "Esta acción revocará sus privilegios de administrador, impidiendo que gestione usuarios, modifique contenido y realice cambios en la configuración. Asegúrate de que esta es la decisión correcta antes de continuar.";
-                document.getElementById('modalConfirmButton').textContent = "Sí, quitar permisos de administrador";
-            } else {
-                document.getElementById('modalMessage').innerHTML =
-                    "¿Estás seguro de que deseas hacer administrador a <strong>" + username + "</strong>?";
-                document.getElementById('modalWarning').innerHTML =
-                    "Otorgar permisos de administrador a este usuario le dará control total sobre la aplicación, incluyendo la gestión de usuarios, modificaciones de contenido y ajustes críticos del sistema. Asegúrate de confiar plenamente en esta persona antes de continuar.";
-                document.getElementById('modalConfirmButton').textContent = "Sí, hacer administrador";
-            }
-        });
-    }
-
+        // Actualizar los campos dentro del modal
+        document.getElementById('topicTitle').textContent = title || "Sin título";
+        document.getElementById('topicCreatedAt').textContent = created_at || "Sin fecha";
+        document.getElementById('topicTopic').textContent = topic || "Sin tema";
+        document.getElementById('topicDescription').textContent = description || "Sin descripción";
+    });
+}
 

@@ -1,7 +1,6 @@
 <?php
-require_once '../../core/init.php';
+require_once '../../includes/header.php';
 accesoAutorizado('publico');
-require_once BASE_PATH.'/includes/header.php';
 ?>
 
 <section class="container">

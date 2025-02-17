@@ -1,7 +1,11 @@
 <?php
-require_once '../core/init.php';
+if (!defined('INIT_LOADED')) {
+    define('INIT_LOADED', true);
+    require_once __DIR__ . '/../core/init.php';
+}
 //Si se ha enviado el formulario de login
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    global $conexion;
     $stmt = $conexion->prepare("SELECT id, username, email, password_hash, is_admin FROM users WHERE email = ?");
     $password = $_POST['password'];
 

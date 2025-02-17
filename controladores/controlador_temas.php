@@ -1,6 +1,9 @@
 <?php
-require_once '../core/init.php';
-require_once  BASE_PATH.'/functions/cohere_api.php'; //por mover de carpeta
+if (!defined('INIT_LOADED')) {
+    define('INIT_LOADED', true);
+    require_once __DIR__ . '/../core/init.php';
+}
+require_once  __DIR__.'/../functions/cohere_api.php';
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -24,18 +27,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 function insertarTema($data) {
     global $conexion;
+
     $topic = $data['topic'];
     $description = $data['description'];
-    $title = generarTituloGlobalCohere($topic); 
-    echo $title;
+    $title = generarTituloGlobalCohere($topic);
     $sql = "INSERT INTO topics (user_id, title, topic, description) VALUES (?, ?, ?, ?)";
     $stmt = $conexion->prepare($sql);
     $stmt->bind_param("isss", $_SESSION['user_id'], $title, $topic, $description);
-        
-
 
     if ($stmt->execute()) {
-        header("Location: " . BASE_URL . "pages/temas.php?mensaje=tema_registrado&value=$topic");
+        header("Location: " . BASE_URL . "pages/temas/mis_temas.php?mensaje=tema_registrado&value=$topic");
         exit();  
     } else {
         echo "Error al registrar tema: " . $conexion->error;
@@ -50,7 +51,7 @@ function actualizarTema($id) {
     $stmt->bind_param("i", $id);
 
     if ($stmt->execute()) {
-        header("Location: " . BASE_URL . "pages/administrar_temas.php");
+        header("Location: " . BASE_URL . "pages/temas/administrar_temas.php");
         exit();  
     } else {
         echo "Error al eliminar tema.";
@@ -65,7 +66,7 @@ function eliminarTema($id) {
     $stmt->bind_param("i", $id);
 
     if ($stmt->execute()) {
-        header("Location: " . BASE_URL . "pages/administrar_temas.php");
+        header("Location: " . BASE_URL . "pages/temas/administrar_temas.php");
         exit();  
     } else {
         echo "Error al eliminar tema.";
@@ -135,7 +136,7 @@ function consultarTemasPendientes() {
     $new_direction = ($direction === "ASC") ? "DESC" : "ASC";
     $order_by = "$order $direction";
 
-    $sql = "SELECT id, title, topic, created_at FROM topics WHERE is_approved = FALSE ORDER BY $order_by";
+    $sql = "SELECT id, title, topic, created_at, description FROM topics WHERE is_approved = FALSE ORDER BY $order_by";
     $result = $conexion->query($sql);
     
     $temas = [];

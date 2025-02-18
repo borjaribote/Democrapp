@@ -48,6 +48,13 @@
     font-family: 'Greek' !important;
     font-size: 1.5em;
 }
+/* Index */
+body section .titulo-fase{
+    font-family: "Shafarik", serif;
+    font-weight: 400;
+    font-size: 3.2em;
+    font-style: normal;
+}
 /* Footer */
 footer {
     color: white;
@@ -166,6 +173,7 @@ th, td {
     transition: all 0.3s ease-in-out;
     font-weight: 500;
     padding: 10px 20px;
+    transition: box-shadow 0.3s ease-in-out;
 }
 
 .nav-tabs .nav-link.active {
@@ -181,8 +189,11 @@ th, td {
     border-radius: 10px 0px;
 }
 
-.nav-tabs .nav-link:hover {
+.nav-tabs .nav-link:hover {    
+    border-radius: 10px 0px;
     color: hsl(0, 0%, 14%) !important;
+    box-shadow: 0px 0px 2px #579ae1 ;
+
 }
 
 .table {

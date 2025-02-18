@@ -58,6 +58,8 @@ function generarTituloGlobalCohere($tema) {
 
     if (empty($titulo)) {
         return "Error: La IA no generó un título válido.";
+    }else{
+        return $titulo;
     }
 
 }

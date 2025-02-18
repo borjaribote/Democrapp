@@ -1,7 +1,7 @@
 <?php
 require_once '../../includes/header.php';
 accesoAutorizado('usuario');
-require_once BASE_PATH.'controladores/controlador_usuarios.php';
+require_once BASE_PATH.'controllers/controlador_usuarios.php';
 require_once BASE_PATH.'/functions/gestion_mensajes.php';
 // Obtener datos del usuario
 $user = consultarUsuario($_SESSION['user_id']);
@@ -19,9 +19,9 @@ $user = consultarUsuario($_SESSION['user_id']);
                         <label class="form-check-label" for="enableEdit">Habilitar edición</label>
                     </div>
 
-                    <form action="<?= BASE_URL ?>controladores/controlador_usuarios.php" method="post">
+                    <form action="<?= BASE_URL ?>controllers/controlador_usuarios.php" method="post">
                         <input type="hidden" name="action" value="update">
-                        <input type="hidden" name="page" value="actualizar_cuenta">
+                        <input type="hidden" name="page" value="cuenta">
                         <input type="hidden" name="id" value="<?= $_SESSION['user_id'] ?>">
                         <div class="mb-3">
                             <label for="name" class="form-label">Nombre</label>
@@ -61,7 +61,7 @@ $user = consultarUsuario($_SESSION['user_id']);
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <form id="deleteForm" action="<?= BASE_URL ?>controladores/controlador_usuarios.php" method="post">
+                <form id="deleteForm" action="<?= BASE_URL ?>controllers/controlador_usuarios.php" method="post">
                     <input type="hidden" name="id" value="<?= $_SESSION['user_id'] ?>">
                     <input type="hidden" name="email" value="<?= $_SESSION['user_email'] ?>">
                     <button type="submit" name="action" value="delete" class="btn btn-danger w-100"> Sí, eliminar cuenta</button>

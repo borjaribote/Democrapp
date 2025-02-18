@@ -1,7 +1,7 @@
 <?php
 require_once '../../includes/header.php';
 accesoAutorizado("usuario");
-require_once BASE_PATH.'/controladores/controlador_usuarios.php';
+require_once BASE_PATH.'/controllers/controlador_usuarios.php';
 require_once BASE_PATH.'/functions/gestion_mensajes.php';
 
 $search = isset($_GET['search']) ? trim($_GET['search']) : '';
@@ -41,10 +41,10 @@ $result = consultarUsuarios($search);
                                     <td><?php echo htmlspecialchars($row['email']); ?></td>
                                     <td><?php echo date("Y-m-d", strtotime($row['registration_date'])); ?></td>
                                     <td>
-                                        <form action="<?= BASE_URL ?>controladores/controlador_usuarios.php" method="post" onsubmit="return confirm('¿Seguro que deseas eliminar este usuario?');">
+                                        <form action="<?= BASE_URL ?>controllers/controlador_usuarios.php" method="post" onsubmit="return confirm('¿Seguro que deseas eliminar este usuario?');">
                                             <input type="hidden" name="action" value="delete">
                                             <input type="hidden" name="email" value="<?= $row['username'] ?>">
-                                            <input type="hidden" name="page" value="usuarios/administrar_usuarios">
+                                            <input type="hidden" name="page" value="usuarios/administrar">
                                             <input type="hidden" name="id" value="<?= $row['id'] ?>">
                                             <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
                                         </form>
@@ -91,7 +91,7 @@ $result = consultarUsuarios($search);
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <form id="adminForm" action="<?= BASE_URL ?>controladores/controlador_usuarios.php" method="post">
+                <form id="adminForm" action="<?= BASE_URL ?>controllers/controlador_usuarios.php" method="post">
                     <input type="hidden" name="id" id="modalUserId">
                     <input type="hidden" name="is_admin" id="modalIsAdmin">
                     <button type="submit" name="action" value="update" class="btn btn-danger w-100" id="modalConfirmButton">

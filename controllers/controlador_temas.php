@@ -8,7 +8,6 @@ require_once  __DIR__.'/../functions/cohere_api.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = isset($_POST['action']) ? $_POST['action'] : '';
-    echo $action;
     switch ($action) {
         case 'insert':
             insertarTema($_POST);
@@ -27,19 +26,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 function insertarTema($data) {
     global $conexion;
-
+ try{
     $topic = $data['topic'];
     $description = $data['description'];
+
     $title = generarTituloGlobalCohere($topic);
     $sql = "INSERT INTO topics (user_id, title, topic, description) VALUES (?, ?, ?, ?)";
     $stmt = $conexion->prepare($sql);
     $stmt->bind_param("isss", $_SESSION['user_id'], $title, $topic, $description);
 
     if ($stmt->execute()) {
-        header("Location: " . BASE_URL . "pages/temas/mis_temas.php?mensaje=tema_registrado&value=$topic");
+        header("Location: " . BASE_URL . "index.php?mensaje=tema_registrado&value=$topic");
         exit();  
-    } else {
-        echo "Error al registrar tema: " . $conexion->error;
+    }
+    } catch (mysqli_sql_exception $e) {
+        if ($conexion->errno == 1062) { 
+            echo "enrtraaa";
+            header("Location: " . BASE_URL . "index.php?mensaje=tema_duplicado&value=$topic");
+            exit();
+        } else {
+            echo "Error al registrar tema: " . $conexion->error;
+        }
     }
 }
 
@@ -51,7 +58,7 @@ function actualizarTema($id) {
     $stmt->bind_param("i", $id);
 
     if ($stmt->execute()) {
-        header("Location: " . BASE_URL . "pages/temas/administrar_temas.php");
+        header("Location: " . BASE_URL . "pages/temas/vista.php");
         exit();  
     } else {
         echo "Error al eliminar tema.";
@@ -66,7 +73,7 @@ function eliminarTema($id) {
     $stmt->bind_param("i", $id);
 
     if ($stmt->execute()) {
-        header("Location: " . BASE_URL . "pages/temas/administrar_temas.php");
+        header("Location: " . BASE_URL . "pages/temas/vista.php");
         exit();  
     } else {
         echo "Error al eliminar tema.";
@@ -113,17 +120,27 @@ WHERE t.user_id = ?";
 
 function consultarTemasAprobados() {
     global $conexion;
+    global $conexion;
+    
+    $order_by = "created_at DESC"; 
+    $allowed_columns = ["title", "topic", "created_at"];
+    $allowed_directions = ["ASC", "DESC"];
+    $order = isset($_GET['order']) && in_array($_GET['order'], $allowed_columns) ? $_GET['order'] : "created_at";
+    $direction = isset($_GET['direction']) && in_array($_GET['direction'], $allowed_directions) ? $_GET['direction'] : "DESC";
+    $new_direction = ($direction === "ASC") ? "DESC" : "ASC";
+    $order_by = "$order $direction";
 
-    $sql = "SELECT id, title, topic, created_at FROM topics WHERE is_approved = TRUE";
+    $sql = "SELECT * FROM topics WHERE is_approved = TRUE  ORDER BY $order_by";
     $result = $conexion->query($sql);
+    
     $temas = [];
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
             $temas[] = $row;
         }
     }
-    
-    return $temas;
+
+    return [$temas, $new_direction]; 
 }
 function consultarTemasPendientes() {
     global $conexion;
@@ -136,7 +153,7 @@ function consultarTemasPendientes() {
     $new_direction = ($direction === "ASC") ? "DESC" : "ASC";
     $order_by = "$order $direction";
 
-    $sql = "SELECT id, title, topic, created_at, description FROM topics WHERE is_approved = FALSE ORDER BY $order_by";
+    $sql = "SELECT * FROM topics WHERE is_approved = FALSE ORDER BY $order_by";
     $result = $conexion->query($sql);
     
     $temas = [];
@@ -146,7 +163,7 @@ function consultarTemasPendientes() {
         }
     }
 
-    return [$temas, $new_direction]; // Retornamos también la nueva dirección
+    return [$temas, $new_direction]; 
 }
 
 ?>

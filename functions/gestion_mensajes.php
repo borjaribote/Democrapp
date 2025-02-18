@@ -18,8 +18,11 @@ switch ($mensaje) {
     case 'admin_actualizado':
         echo '<div class="alert alert-success text-center">Permisos de usuario actualizados correctamente</div>';
         break;
-    case 'error_login':
-        echo '<div class="alert alert-danger text-center">Error en el inicio de sesión. Por favor, intenta de nuevo.</div>';
+    case 'ronda_creada':
+        echo '<div class="alert alert-success text-center">La ronda se ha creado correctamente</div>';
+        break;
+    case 'tema_duplicado':
+        echo '<div class="alert alert-danger text-center" role="alert"> Error de registro: El tema <strong>' . $value . '</strong> se ha registrado anteriormente.</div>';
         break;
     default:
         break;

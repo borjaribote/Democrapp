@@ -30,6 +30,9 @@ addEventListener("DOMContentLoaded", () => {
     if (document.getElementById("viewTopicInfo")) {
         viewTopicInfo(document.getElementById("viewTopicInfo"));
     }
+    if (document.querySelector('select[name="stage"]')) {
+        showHideTopicsOnStageMenu(document.querySelector('select[name="stage"]'));
+    }
    
 });
 
@@ -158,6 +161,19 @@ function viewTopicInfo(modal) {
         document.getElementById('topicCreatedAt').textContent = created_at || "Sin fecha";
         document.getElementById('topicTopic').textContent = topic || "Sin tema";
         document.getElementById('topicDescription').textContent = description || "Sin descripción";
+    });
+}
+
+function showHideTopicsOnStageMenu (stage){
+    stage.addEventListener('change', function() {
+        var topicsContainer = document.getElementById('topics-container');
+        if (this.value != 'proposals') {
+            topicsContainer.style.display = 'block';
+            topicsContainer.querySelector('select[name="topics[]"]').setAttribute('required', '');
+        } else {
+            topicsContainer.style.display = 'none';
+            topicsContainer.querySelector('select[name="topics[]"]').removeAttribute('required');
+        }
     });
 }
 

@@ -48,7 +48,7 @@ function insertarRonda($data) {
                 $stmtTopic->execute();
             }
         }
-        header("Location: " . BASE_URL . "pages/rondas/administrar_rondas.php");
+        header("Location: " . BASE_URL . "pages/rondas/vista.php?ronda_creada");
         exit();
     } else {
         echo "Error al registrar la ronda: " . $conexion->error;
@@ -66,7 +66,7 @@ function actualizarRonda($id, $status) {
     $stmt->bind_param("si", $status, $id);
 
     if ($stmt->execute()) {
-        header("Location: " . BASE_URL . "pages/rondas/administrar_rondas.php");
+        header("Location: " . BASE_URL . "pages/rondas/vista.php");
         exit();
     } else {
         echo "Error al actualizar la ronda.";
@@ -84,7 +84,7 @@ function eliminarRonda($id) {
     $stmt->bind_param("i", $id);
 
     if ($stmt->execute()) {
-        header("Location: " . BASE_URL . "pages/rondas/administrar_rondas.php");
+        header("Location: " . BASE_URL . "pages/rondas/vista.php");
         exit();
     } else {
         echo "Error al eliminar la ronda.";
@@ -97,7 +97,7 @@ function eliminarRonda($id) {
 function obtenerRondasConTemas() {
     global $conexion;
 
-    $sql = "SELECT id, name, DATE_FORMAT(start_date, '%d-%m-%Y') AS start_date, 
+    $sql = "SELECT id, name, stage, DATE_FORMAT(start_date, '%d-%m-%Y') AS start_date, 
                    DATE_FORMAT(end_date, '%d-%m-%Y') AS end_date, status 
             FROM rounds ORDER BY start_date DESC";
     $result = $conexion->query($sql);
@@ -129,5 +129,48 @@ function obtenerRondasConTemas() {
     return $rondas;
 }
 
+function obtenerRondaActiva() {
+    global $conexion;
+
+    $sql = "SELECT r.id AS round_id, r.name AS round_name, r.stage, r.start_date, r.end_date, 
+                   t.id AS topic_id, t.title, t.description 
+            FROM rounds r
+            LEFT JOIN topic_rounds tr ON r.id = tr.round_id
+            LEFT JOIN topics t ON tr.topic_id = t.id
+            WHERE r.status = 'active'
+            ORDER BY r.start_date ASC
+            LIMIT 1";
+
+    $result = $conexion->query($sql);
+
+    if (!$result) {
+        die("Error en la consulta: " . $conexion->error); // Para depuración
+    }
+
+    $ronda = [];
+    if ($row = $result->fetch_assoc()) {
+        $ronda = [
+            'round_id' => $row['round_id'],
+            'round_name' => $row['round_name'],
+            'stage' => $row['stage'],
+            'start_date' => $row['start_date'],
+            'end_date' => $row['end_date'],
+            'topics' => []
+        ];
+
+        // Obtener todos los temas de la ronda activa
+        do {
+            if ($row['topic_id']) {
+                $ronda['topics'][] = [
+                    'topic_id' => $row['topic_id'],
+                    'title' => $row['title'],
+                    'description' => $row['description']
+                ];
+            }
+        } while ($row = $result->fetch_assoc());
+    }
+
+    return $ronda; // Devuelve el array con los datos
+}
 
 ?>

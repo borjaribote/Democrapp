@@ -1,7 +1,8 @@
 <?php
 require_once '../../includes/header.php';
 accesoAutorizado("admin");
-require_once BASE_PATH.'/controladores/controlador_temas.php';
+require_once BASE_PATH.'/controllers/controlador_temas.php';
+require_once BASE_PATH.'/functions/gestion_mensajes.php';
 //Verificar cookie para mantener la misma pestaña activa
 $activeTab = isset($_COOKIE["temas_tab"]) ? json_decode($_COOKIE["temas_tab"], true)["tab"] : "nueva"; // Por defecto "nueva"
 ?>
@@ -27,17 +28,17 @@ $activeTab = isset($_COOKIE["temas_tab"]) ? json_decode($_COOKIE["temas_tab"], t
     <div class="tab-content mt-4">
         <!-- 🔹 Pestaña: Aprobar Temas -->
         <div class="tab-pane fade <?= ($activeTab == 'nueva') ? 'active show' : '' ?>" id="nueva">
-            <?php include BASE_PATH . "pages/temas/aprobar_temas.php"; ?> 
+            <?php include BASE_PATH . "pages/temas/aprobar.php"; ?> 
         </div>
 
         <!-- 🔹 Pestaña: Actualizar Temas -->
         <div class="tab-pane fade <?= ($activeTab == 'actualizar') ? 'active show' : '' ?>" id="actualizar">
-            <?php include BASE_PATH.'pages/temas/actualizar_temas.php'; ?> 
+            <?php include BASE_PATH.'pages/temas/actualizar.php'; ?> 
         </div>
 
         <!-- 🔹 Pestaña: Temas clasificados -->
         <div class="tab-pane fade <?= ($activeTab == 'clasificados') ? 'active show' : '' ?>" id="clasificados">
-            <?php include BASE_PATH.'pages/temas/temas_clasificados.php'; ?> 
+            <?php include BASE_PATH.'pages/temas/clasificados.php'; ?> 
         </div>
     </div>
 </section>

@@ -10,6 +10,7 @@ $rondas = obtenerRondasConTemas(); // Obtener todas las rondas
             <thead class="thead-dark">
                 <tr>
                     <th>Nombre</th>
+                    <th>Fase</th>
                     <th>Temas incluidos</th>
                     <th>Fecha Inicio</th>
                     <th>Fecha Fin</th>
@@ -19,11 +20,31 @@ $rondas = obtenerRondasConTemas(); // Obtener todas las rondas
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($rondas as $ronda): 
-                    if ($ronda['status'] != 'finished'){
+                <?php foreach ($rondas as $ronda):                    
                         ?>
                     <tr>
                         <td><?= htmlspecialchars($ronda['name']); ?></td>
+                        <td>
+                            <?php 
+                            switch ($ronda['stage']) {
+                                case 'proposals':
+                                    echo 'Propuestas';
+                                    break;
+                                case 'qualifying':
+                                    echo 'Clasificación';
+                                    break;
+                                case 'tiebreaker':
+                                    echo 'Desempate';
+                                    break;
+                                case 'final':
+                                    echo 'Final';
+                                    break;
+                                default:
+                                    echo htmlspecialchars($ronda['stage']);
+                                    break;
+                            }
+                            ?>
+                        </td>
                         <td>
                             <button type="button" class="btn btn-outline-dark btn-sm" data-bs-toggle="modal" data-bs-target="#temasModal<?= $ronda['id']; ?>">
                                 Ver temas
@@ -67,7 +88,7 @@ $rondas = obtenerRondasConTemas(); // Obtener todas las rondas
                             <?= ucfirst($ronda['status']); ?>
                         </span></td>
                         <td>
-                            <form method="POST" action="../controladores/controlador_rondas.php">
+                            <form method="POST" action="<?php echo BASE_URL; ?>controllers/controlador_rondas.php">
                                 <input type="hidden" name="round_id" value="<?= $ronda['id']; ?>">
                                 <select name="status" class="form-select">
                                     <option value="active" <?= $ronda['status'] == 'active' ? 'selected' : ''; ?>>Activa</option>
@@ -82,7 +103,7 @@ $rondas = obtenerRondasConTemas(); // Obtener todas las rondas
                         </td>
                        
                     </tr>
-                <?php }
+                <?php 
             endforeach; ?>
             </tbody>
         </table>

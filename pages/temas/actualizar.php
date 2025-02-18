@@ -1,5 +1,5 @@
 <?php
-list($result, $new_direction) = consultarTemasPendientes(); // Recibimos la nueva dirección
+list($result, $new_direction) = consultarTemasAprobados(); // Recibimos la nueva dirección
 
 // Determinar el orden actual y la nueva dirección
 $current_order = $_GET['order'] ?? '';
@@ -69,9 +69,9 @@ $created_icon = ($current_order === 'created_at') ? ($new_direction === "ASC" ? 
                     </button>
                     </td>
                     <td>
-                        <form method="POST" action="<?= BASE_URL ?>controladores/controlador_temas.php" class="d-inline">
+                        <form method="POST" action="<?= BASE_URL ?>controllers/controlador_temas.php" class="d-inline">
                             <input type="hidden" name="topic_id" value="<?php echo $row['id']; ?>">
-                            <button type="submit" name="action" value="update" class="btn btn-success btn-sm">Aprobar</button>
+                            <button type="submit" name="action" value="update" class="btn btn-warning text-white btn-sm">Editar</button>
                             <button type="submit" name="action" value="delete" class="btn btn-danger btn-sm">Eliminar</button>
                         </form>
                     </td>
@@ -118,25 +118,3 @@ $created_icon = ($current_order === 'created_at') ? ($new_direction === "ASC" ? 
         </div>
     </div>
 </div>
-
-
-    <!-- Modal -->
- <!--    <div class="modal fade" id="viewTopicInfo" tabindex="-1" aria-labelledby="temaModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="temaModalLabel">Detalles del Tema</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                </div>
-                <div class="modal-body">
-                    <strong>Título:</strong> <span id="topicTitle"></span><br>
-                    <strong>Fecha de Creación:</strong> <span id="topicCreatedAt"></span><br>
-                    <strong>Tema:</strong> <span id="topicTopic"></span><br>
-                    <strong>Descripción:</strong> <span id="topicDescription"></span>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                </div>
-            </div>
-        </div>
-    </div> -->

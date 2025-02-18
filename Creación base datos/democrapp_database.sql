@@ -15,11 +15,11 @@ CREATE TABLE IF NOT EXISTS users (
     registration_date DATETIME DEFAULT CURRENT_TIMESTAMP
 ) CHARACTER SET utf8 COLLATE utf8_bin;
 
--- Crear la tabla de rondas
+-- Crear la tabla de rondas 
 CREATE TABLE IF NOT EXISTS rounds (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-    stage VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+    stage ENUM('proposals', 'qualifying', 'final', 'tiebreaker') NOT NULL,
     start_date DATETIME,
     end_date DATETIME,
     status ENUM('active', 'inactive', 'finished') DEFAULT 'inactive',
@@ -39,6 +39,7 @@ CREATE TABLE IF NOT EXISTS topics (
     similar_to TEXT NULL,
     is_approved BOOLEAN DEFAULT FALSE,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    CONSTRAINT unique_topic UNIQUE (topic)
 ) CHARACTER SET utf8 COLLATE utf8_bin;
 
 -- Crear la tabla intermedia para relacionar temas con múltiples rondas
@@ -62,7 +63,6 @@ CREATE TABLE IF NOT EXISTS votes (
     FOREIGN KEY (topic_id) REFERENCES topics(id) ON DELETE CASCADE,
     FOREIGN KEY (round_id) REFERENCES rounds(id) ON DELETE CASCADE
 ) CHARACTER SET utf8 COLLATE utf8_bin;
-
 
 -- Crear la tabla de finalistas con el campo winner
 CREATE TABLE IF NOT EXISTS finalists (

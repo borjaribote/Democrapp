@@ -1,33 +1,10 @@
 <?php
 require_once '../../includes/header.php';
 accesoAutorizado("usuario");
-require_once BASE_PATH.'/functions/gestion_mensajes.php';
-require_once BASE_PATH.'/controladores/controlador_temas.php';
+require_once BASE_PATH.'/controllers/controlador_temas.php';
 
 ?>
-<section class="container my-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card p-4">
-                <div class="card-body">
-                    <h2 class="card-title text-center">Proponer Tema</h2>
-                    <form action="<?= BASE_URL ?>controladores/controlador_temas.php" method="post">
-                        <input type="hidden" name="action" value="insert">
-                        <div class="mb-3">
-                            <label for="topic" class="form-label required">Tema</label>
-                            <input type="text" id="topic" name="topic" class="form-control" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="description" class="form-label">Descripción</label>
-                            <textarea id="description" name="description" class="form-control" rows="4"></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-success w-100">Proponer</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+<!-- FAse de propuestas -->
 <?php
     $result = consultarDatosTemas($_SESSION['user_id']);
 ?>
@@ -52,7 +29,27 @@ require_once BASE_PATH.'/controladores/controlador_temas.php';
                                     <tr>
                                         <td><?php echo htmlspecialchars($row['topic']); ?></td>
                                         <td><?php echo htmlspecialchars($row['estado_tema']); ?></td>
-                                        <td><?php echo htmlspecialchars($row['stage'] ?? 'Sin fase'); ?></td>
+                                        <td>
+                                            <?php 
+                                            switch ($row['stage']) {
+                                                case 'proposals':
+                                                    echo 'Propuestas';
+                                                    break;
+                                                case 'qualifying':
+                                                    echo 'Clasificación';
+                                                    break;
+                                                case 'tiebreaker':
+                                                    echo 'Desempate';
+                                                    break;
+                                                case 'final':
+                                                    echo 'Final';
+                                                    break;
+                                                default:
+                                                    echo 'Sin fase';
+                                                    break;
+                                            }
+                                            ?>
+                                        </td>
                                         <td><?php echo htmlspecialchars($row['total_votes'] ?? 0); ?></td>
                                     </tr>
                                 <?php } else: ?>

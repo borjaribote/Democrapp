@@ -9,7 +9,7 @@ accesoAutorizado('publico');
                 <div class="card mt-5 p-3">
                     <div class="card-body">
                         <h2 class="card-title text-center">Formulario de registro</h2>
-                        <form action="<?= BASE_URL ?>controladores/controlador_usuarios.php" method="post" onsubmit="return usedEmail(event, this)">
+                        <form action="<?= BASE_URL ?>controllers/controlador_usuarios.php" method="post" onsubmit="return usedEmail(event, this)">
                             <input type="hidden" name="action" value="insert">
                             <div class="mb-3">
                                 <label for="name" class="form-label required">Nombre</label>

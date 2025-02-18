@@ -56,14 +56,14 @@ function actualizarUsuario($data) {
         $sql = "UPDATE users SET is_admin = ? WHERE id = ?";
         $stmt = $conexion->prepare($sql);
         $stmt->bind_param("ii", $data['is_admin'], $id);
-        $location = "/pages/usuarios/administrar_usuarios.php?mensaje=admin_actualizado";
+        $location = "/pages/usuarios/administrar.php?mensaje=admin_actualizado";
     }else{
         $sql = "UPDATE users SET username = ?, email = ? WHERE id = ?";
         $stmt = $conexion->prepare($sql);
         $stmt->bind_param("sssi", $data['username'], $data['email'], $id);  
         $_SESSION['user_name'] = $data['username'];
         $_SESSION['user_email'] = $data['email'];     
-        $location = "/pages/usuarios/actualizar_cuenta.php?mensaje=usuario_actualizado";
+        $location = "/pages/usuarios/actualizar.php?mensaje=usuario_actualizado";
     }
     if ($stmt->execute()) {
         header("Location: " . BASE_URL . $location);
@@ -79,9 +79,9 @@ function eliminarUsuario($data) {
     $page = $data['page'];
     $id = $data['id'];
     $session=null;
-    if ($page=="usuarios/administrar_usuarios"){
-        $location = "/pages/usuarios/administrar_usuarios.php?mensaje=cuenta_eliminada&value=$email";
-    }else if($page == "actualizar_cuenta"){
+    if ($page=="usuarios/administrar"){
+        $location = "/pages/usuarios/administrar.php?mensaje=cuenta_eliminada&value=$email";
+    }else if($page == "cuenta"){
         $location = "index.php?mensaje=cuenta_eliminada&value=$email";
     }
     $sql = "DELETE FROM users WHERE id = ?";
@@ -89,9 +89,9 @@ function eliminarUsuario($data) {
     $stmt->bind_param("i", $id);
 
     if ($stmt->execute()) {
-        if ($page=="usuarios/administrar_usuarios"){
-            $location = "/pages/usuarios/administrar_usuarios.php?mensaje=cuenta_eliminada&value=$email";
-        }else if($page == "actualizar_cuenta"){
+        if ($page=="usuarios/administrar"){
+            $location = "/pages/usuarios/administrar.php?mensaje=cuenta_eliminada&value=$email";
+        }else if($page == "cuenta"){
             session_destroy(); 
             $_SESSION = [];
             $location = "index.php?mensaje=cuenta_eliminada&value=$email";

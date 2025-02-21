@@ -1,35 +1,62 @@
-/* Global CSS */
+/* Global css */
  * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
 
- body {
-    font-family: Arial, sans-serif;
-    line-height: 1.6;
-    background-color: #f4f4f4;
-    color: #333;
+ body, html {
+    background: #F4F4F4;
+    font-family: "VT323", monospace !important;
 }
-
+.container{
+    flex: 1;
+}
 @font-face {
     font-family: 'SouthPark';
     src: url('../fonts/south-park.woff') format('woff');
     font-weight: normal;
     font-style: normal;
 }
+@font-face {
+    font-family: 'Greek';
+    src: url('../fonts/heorot.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Greek_outline';
+    src: url('../fonts/heorots.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+
+.fa, .fa-brands, .fa-duotone, .fa-light, .fa-regular, .fa-solid, .fa-thin, .fab, .fad, .fal, .far, .fas, .fat {
+    margin:5px;
+}
+
+body .btn-primary{
+    --bs-btn-bg: #579ae1 !important; 
+    --bs-btn-border-color: #579ae1 !important;
+}
+
+
+/*Nav*/
+.navbar .greek{
+    font-family: 'Greek' !important;
+    font-size: 1.5em;
+}
+
 /* Footer */
 footer {
-    position: fixed;
-    bottom: 0;
+    color: white;
+    padding: 10px;
     width: 100%;
-    background-color: #333;
-    color: #fff;
-    text-align: center;
-    padding: 10px 0;
+    position: relative;
+    bottom: 0;
 }
 /* Login */
-
 a,
 a:hover {
     text-decoration: none;
@@ -37,7 +64,11 @@ a:hover {
 a{
     text-decoration: none;
 }
-
+/*Forms*/
+  .required:after {
+    content:" *";
+    color: red;
+  }
 /*404*/
 
 #error_page h1 {
@@ -69,4 +100,256 @@ a{
     color: rgba(69, 69, 194, 0.877);
 
 
+}
+
+/*Tablas*/
+/* Ajustar ancho máximo de la tabla */
+.table {
+    width: 100%;
+    word-wrap: break-word;
+}
+
+/* Limitar el ancho de las columnas para evitar crecimiento excesivo */
+th, td {
+    text-align: center !important;
+    vertical-align: middle;
+    padding: 8px;
+    white-space: nowrap;
+    overflow: auto;
+    text-overflow: ellipsis;
+    max-width: 300px;
+} 
+
+/* Hacer que la tabla sea responsive */
+@media (max-width: 768px) {
+    .table-responsive {
+        overflow-x: auto;
+        display: block;
+    }
+
+    th, td {
+        font-size: 14px;
+        max-width: 100px; /* Reduce el tamaño en móviles */
+        
+    }
+}
+
+/*Rondas*/
+.winner-list {
+/*     max-width: 200px;
+ */    white-space: nowrap;
+    overflow: auto;
+    text-overflow: ellipsis;
+}
+
+.winner-list ol {
+    padding-left: 15px;
+    margin-bottom: 0;
+}
+
+.winner-list li {
+    font-size: 14px;
+    line-height: 1.3;
+    text-align: left;
+}
+body section .titulo-ronda{
+    font-weight: 400;
+    font-size: 3.2em;
+    font-style: normal;
+}
+.accordion-button:not(.collapsed) {
+    background-color: white !important; /* Cambia el color de fondo */
+    color: black !important; /* Cambia el color del texto */
+    box-shadow: none !important; /* Elimina la sombra azul */
+}
+
+.accordion-button {
+    background-color: white !important; /* Color de fondo cuando está cerrado */
+    color: black !important; /* Color del texto */
+    border: 1px solid #ddd; /* Borde para mantener estructura */
+}
+
+.accordion-button:focus {
+    box-shadow: none !important; /* Evita el efecto de foco azul */
+    outline: none !important;
+}
+
+#puntuacion-din,
+#puntuacion-static {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.medalla{
+    display: flex;
+    flex-flow: column wrap;
+    align-items: center;
+}
+.token-din,
+.token-static {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.8rem;
+  font-family: "VT323", monospace;
+  color: #333;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  text-align: center;
+  box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.8);
+  border: 4px solid #222;
+  border-radius: 8px;
+}
+
+/* Hover con efecto de “presión” */
+.token-din:hover {
+  transform: scale(1.1);
+  box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.8);
+}
+
+/* Animación de clic */
+.token-din:active {
+  transform: scale(0.95);
+  box-shadow: 1px 1px 0px rgba(0, 0, 0, 0.8);
+}
+
+/* Colores pastel en pixel-art */
+.token-3 {
+  background: #A0C4FF;
+  border-color: #7089C4;
+  filter: contrast(0.5);
+}
+
+
+.token-3.selected,
+.token-2.selected,
+.token-1.selected {
+    filter: contrast(1);
+    transition: filter 0.2s ease-in-out;
+}
+
+.token-2 {
+  background: #B9E4C9;
+  border-color: #7FA68B;
+  filter: contrast(0.5);
+}
+
+.token-1 {
+  background: #FFC8A2;
+  border-color: #C49778;
+  filter: contrast(0.5);
+
+}
+
+#voteForm .token {
+    filter: contrast(0.5); 
+    transition: filter 0.3s ease-in-out;
+}
+
+#voteForm .token.selected {
+    filter: contrast(1); 
+}
+
+/* Texto refinado */
+.medalla strong {
+  font-weight: bold;
+  margin-top: 6px;
+  font-size: 1rem;
+  color: #333;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+
+/***************/
+.form-control:focus{
+    box-shadow: none !important;
+}
+.input-group .btn-primary{
+ background-color:#579ae1 !important;
+}
+.nav-tabs .nav-link {
+    border: none !important;
+    color: hsl(210, 1%, 29%) !important;
+    transition: all 0.3s ease-in-out;
+    font-weight: 500;
+    padding: 10px 20px;
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+.nav-tabs .nav-link.active {
+    background-color: #579ae1 !important;
+    color: white !important;
+    font-weight: 600;
+    border-radius: 10px 0px;
+}
+.nav-tabs .nav-link.active:hover {
+    background-color: #579ae1 !important;
+    color: white !important;
+    font-weight: 600;
+    border-radius: 10px 0px;
+}
+
+.nav-tabs .nav-link:hover {    
+    border-radius: 10px 0px;
+    color: hsl(0, 0%, 14%) !important;
+    box-shadow: 0px 0px 2px #579ae1 ;
+
+}
+
+.table {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.table thead {
+    background-color: #f8f9fa;
+    font-weight: 600;
+}
+
+.table tbody tr {
+    transition: all 0.2s ease-in-out;
+}
+
+.table tbody tr:hover {
+    background-color: #f1f3f5;
+}
+
+.btn-success, .btn-danger {
+    font-weight: 500;
+    border-radius: 20px;
+    padding: 6px 14px;
+    transition: all 0.2s ease-in-out;
+}
+
+.btn-success:hover {
+    background-color: #28a745;
+}
+
+.btn-danger:hover {
+    background-color: #dc3545;
+}
+
+.input-group .form-control {
+    border-radius: 20px;
+    border: 1px solid #ced4da;
+    padding: 10px;
+}
+
+.input-group .btn-primary {
+    border-radius: 20px;
+    background-color: #007bff;
+    border-color: #007bff;
+    transition: all 0.3s ease-in-out;
+}
+
+.input-group .btn-primary:hover {
+    background-color: #0056b3;
 }

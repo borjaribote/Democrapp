@@ -1,5 +1,8 @@
 <?php
-require_once "../conexion.php";
+if (!defined('INIT_LOADED')) {
+    define('INIT_LOADED', true);
+    require_once __DIR__ . '/../core/init.php';
+}
 global $conexion;
 
 if (isset($_POST['email'])) {

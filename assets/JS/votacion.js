@@ -16,31 +16,44 @@ document.addEventListener("DOMContentLoaded", function () {
             manageTokens(this,"token-1");
         }); 
     });
+    document.getElementById("submitVote").addEventListener("click", function() {
+
+    });
 });
 
 function manageTokens(element, token) {
     var staticPointToken = document.querySelector(`#puntuacion-static .${token}`);
-    var currentVoteId = element.getAttribute('data-voteid');
+    var currentVoteId = element.getAttribute('data-topicid');
     let idSession = sessionStorage.getItem(token);
 
     if (compareSessionWithID(currentVoteId) && !idSession) {
         sessionStorage.setItem(token, currentVoteId);
         staticPointToken.classList.remove("selected");
         element.classList.add("selected");
-    }  else if (idSession === currentVoteId) {
-        
-            sessionStorage.removeItem(token);
-            staticPointToken.classList.add("selected");
-            element.classList.remove("selected");
-        
-    }else if (idSession && !compareSessionValue()) {
-        
+    }else if (idSession === currentVoteId) {  
+        sessionStorage.removeItem(token);
+        staticPointToken.classList.add("selected");
+        element.classList.remove("selected");     
+    }else if (idSession && !compareSessionValue()) {   
         document.querySelector(`#puntuacion-din .${token}_id-${idSession}`).classList.remove("selected");
         element.classList.add("selected");
-        sessionStorage.setItem(token, currentVoteId);
-    
-}else {
-        alert("No se puede dar dos votos al mismo tema");
+        sessionStorage.setItem(token, currentVoteId); 
+    }else{
+            if (!document.getElementById("warningMessage")) {
+                const warningMessage = document.createElement("div");
+                warningMessage.id = "warningMessage";
+                warningMessage.textContent = "No se puede dar dos votos al mismo tema";
+                warningMessage.classList.add("alert", "alert-danger", "text-center", "mt-3");
+                document.getElementById('mainContent').appendChild(warningMessage);
+
+                setTimeout(() => {
+                    warningMessage.style.transition = "opacity 1s";
+                    warningMessage.style.opacity = "0";
+                    setTimeout(() => {
+                        warningMessage.remove();
+                    }, 1000);
+                }, 3000);
+            }
     }
 }
 

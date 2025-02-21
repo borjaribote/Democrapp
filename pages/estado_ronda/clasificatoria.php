@@ -14,11 +14,12 @@
         <strong>1 Punto</strong>
     </div>
 </div>
+<?php  $temas = obtenerTemasRondaActiva(); ?>
     <form id="voteForm" action="guardar_voto.php" method="POST">
+    <input type="hidden" name="user_id" value="<?php $_SESSION['user_id'] ?>" >
+    <input type="hidden" name="round_id" value="<?php $ronda_activa['round_id'] ?>" >
         <div class="row" id="topicsContainer">
-            <?php
-                $temas = obtenerTemasRondaActiva(); 
-                foreach ($temas as $tema) {
+            <?php foreach ($temas as $tema) {
                     ?><div class='col-md-4 mb-3'>
                             <div class='card text-center'>
                                 <div class='card-body'>

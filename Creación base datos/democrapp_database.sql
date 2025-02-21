@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE TABLE IF NOT EXISTS rounds (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-    stage ENUM('proposals', 'qualifying', 'final', 'tiebreaker') NOT NULL,
+    stage ENUM('propuestas', 'clasificatoria', 'final', 'desempate') NOT NULL,
     start_date DATETIME,
     end_date DATETIME,
     status ENUM('active', 'inactive', 'finished') DEFAULT 'inactive',

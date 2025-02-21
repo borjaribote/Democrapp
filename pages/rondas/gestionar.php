@@ -14,6 +14,7 @@ $rondas = obtenerRondasConTemas(); // Obtener todas las rondas
                     <th>Temas incluidos</th>
                     <th>Fecha Inicio</th>
                     <th>Fecha Fin</th>
+                    <th>Hora Fin</th>
                     <th>Estado Actual</th>
                     <th>Nuevo Estado</th>
                     <th>Acción</th>
@@ -84,6 +85,7 @@ $rondas = obtenerRondasConTemas(); // Obtener todas las rondas
 
                         <td><?= htmlspecialchars($ronda['start_date']); ?></td>
                         <td><?= htmlspecialchars($ronda['end_date']); ?></td>
+                        <td><?= htmlspecialchars($ronda['end_time']); ?></td>
                         <td><span class="badge bg-<?= $ronda['status'] == 'active' ? 'success' : ($ronda['status'] == 'inactive' ? 'warning' : 'danger') ?>">
                             <?= ucfirst($ronda['status']); ?>
                         </span></td>

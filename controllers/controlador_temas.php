@@ -21,9 +21,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         default:
             echo "Acción no válida.";
     }
-} else {
 }
 
+/*Página: Index Fase:Propuestas */
 function insertarTema($data) {
     global $conexion;
  try{
@@ -50,6 +50,7 @@ function insertarTema($data) {
     }
 }
 
+/* No se usa */
 function actualizarTema($id) {
     global $conexion;
 
@@ -65,6 +66,7 @@ function actualizarTema($id) {
     }
 }
 
+/*Página: Temas Ventana:Aprobar temas */
 function eliminarTema($id) {
     global $conexion;
 
@@ -80,6 +82,7 @@ function eliminarTema($id) {
     }
 }
 
+/*Página: Mis temas */
 function consultarDatosTemas($id) {
     global $conexion;
 
@@ -118,30 +121,7 @@ WHERE t.user_id = ?";
     return $temas;
 }
 
-function consultarTemasAprobados() {
-    global $conexion;
-    global $conexion;
-    
-    $order_by = "created_at DESC"; 
-    $allowed_columns = ["title", "topic", "created_at"];
-    $allowed_directions = ["ASC", "DESC"];
-    $order = isset($_GET['order']) && in_array($_GET['order'], $allowed_columns) ? $_GET['order'] : "created_at";
-    $direction = isset($_GET['direction']) && in_array($_GET['direction'], $allowed_directions) ? $_GET['direction'] : "DESC";
-    $new_direction = ($direction === "ASC") ? "DESC" : "ASC";
-    $order_by = "$order $direction";
-
-    $sql = "SELECT * FROM topics WHERE is_approved = TRUE  ORDER BY $order_by";
-    $result = $conexion->query($sql);
-    
-    $temas = [];
-    if ($result->num_rows > 0) {
-        while ($row = $result->fetch_assoc()) {
-            $temas[] = $row;
-        }
-    }
-
-    return [$temas, $new_direction]; 
-}
+/*Página: Temas Ventana:Aprobar temas */
 function consultarTemasPendientes() {
     global $conexion;
     
@@ -164,6 +144,82 @@ function consultarTemasPendientes() {
     }
 
     return [$temas, $new_direction]; 
+}
+
+/*Página: Temas Ventana:Temas aprobados */
+function consultarTemasAprobadosOrdenado() {
+    global $conexion;
+    
+    $order_by = "created_at DESC"; 
+    $allowed_columns = ["title", "topic", "created_at"];
+    $allowed_directions = ["ASC", "DESC"];
+    $order = isset($_GET['order']) && in_array($_GET['order'], $allowed_columns) ? $_GET['order'] : "created_at";
+    $direction = isset($_GET['direction']) && in_array($_GET['direction'], $allowed_directions) ? $_GET['direction'] : "DESC";
+    $new_direction = ($direction === "ASC") ? "DESC" : "ASC";
+    $order_by = "$order $direction";
+
+    $sql = "SELECT * FROM topics WHERE is_approved = TRUE  ORDER BY $order_by";
+    $result = $conexion->query($sql);
+    
+    $temas = [];
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $temas[] = $row;
+        }
+    }
+
+    return [$temas, $new_direction]; 
+}
+
+/*Página: Rondas Ventana:Crear ronda Fase: Clasificación */
+function consultarTemasAprobados() {
+    global $conexion;
+    
+    $order_by = "created_at DESC"; 
+    $sql = "SELECT * FROM topics WHERE is_approved = TRUE  ORDER BY $order_by";
+    $result = $conexion->query($sql);
+    
+    $temas = [];
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $temas[] = $row;
+        }
+    }
+
+    return $temas; 
+}
+/*Página: Index Fase: Clasificación */
+function obtenerTemasRondaActiva() {
+    global $conexion;
+
+    // Obtener la ronda activa
+    $sql_ronda = "SELECT id FROM rounds WHERE status = 'active' LIMIT 1";
+    $stmt_ronda = $conexion->prepare($sql_ronda);
+    $stmt_ronda->execute();
+    $result_ronda = $stmt_ronda->get_result();
+    $ronda = $result_ronda->fetch_assoc();
+
+    if (!$ronda) {
+        return []; // No hay ronda activa
+    }
+
+    // Obtener los temas asociados a la ronda activa
+    $sql_temas = "SELECT *
+                  FROM topics t
+                  JOIN topic_rounds tr ON t.id = tr.topic_id
+                  WHERE tr.round_id = ?";
+    
+    $stmt_temas = $conexion->prepare($sql_temas);
+    $stmt_temas->bind_param("i", $ronda['id']);
+    $stmt_temas->execute();
+    $result_temas = $stmt_temas->get_result();
+
+    $temas = [];
+    while ($row = $result_temas->fetch_assoc()) {
+        $temas[] = $row;
+    }
+
+    return $temas;
 }
 
 ?>

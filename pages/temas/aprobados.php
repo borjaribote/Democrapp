@@ -1,5 +1,5 @@
 <?php
-list($result, $new_direction) = consultarTemasAprobados(); // Recibimos la nueva dirección
+list($result, $new_direction) = consultarTemasAprobadosOrdenado(); // Recibimos la nueva dirección
 
 // Determinar el orden actual y la nueva dirección
 $current_order = $_GET['order'] ?? '';
@@ -13,7 +13,7 @@ $created_icon = ($current_order === 'created_at') ? ($new_direction === "ASC" ? 
 ?>
 
 <div class="container my-5">
-    <h2 class="mb-4">Lista de temas por moderar</h2>
+    <h2 class="mb-4">Lista de temas aprobados</h2>
 
     <!-- Formulario de Búsqueda -->
     <form method="GET" action="" class="mb-4">
@@ -71,7 +71,6 @@ $created_icon = ($current_order === 'created_at') ? ($new_direction === "ASC" ? 
                     <td>
                         <form method="POST" action="<?= BASE_URL ?>controllers/controlador_temas.php" class="d-inline">
                             <input type="hidden" name="topic_id" value="<?php echo $row['id']; ?>">
-                            <button type="submit" name="action" value="update" class="btn btn-warning text-white btn-sm">Editar</button>
                             <button type="submit" name="action" value="delete" class="btn btn-danger btn-sm">Eliminar</button>
                         </form>
                     </td>

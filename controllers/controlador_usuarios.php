@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo "Acción no válida.";
     }
 }
-
+/*Página: registro  */
 function insertarUsuario($data) {
     global $conexion;
 
@@ -43,6 +43,7 @@ function insertarUsuario($data) {
     }
 }
 
+/*Página: Mi cuenta*/
 function actualizarUsuario($data) {
     global $conexion;
 
@@ -63,7 +64,7 @@ function actualizarUsuario($data) {
         $stmt->bind_param("sssi", $data['username'], $data['email'], $id);  
         $_SESSION['user_name'] = $data['username'];
         $_SESSION['user_email'] = $data['email'];     
-        $location = "/pages/usuarios/actualizar.php?mensaje=usuario_actualizado";
+        $location = "/pages/usuarios/micuenta.php?mensaje=usuario_actualizado";
     }
     if ($stmt->execute()) {
         header("Location: " . BASE_URL . $location);
@@ -73,6 +74,7 @@ function actualizarUsuario($data) {
     }
 }
 
+/*Página: usuarios/administrar */
 function eliminarUsuario($data) {
     global $conexion;
     $email = $data['email'];
@@ -102,6 +104,8 @@ function eliminarUsuario($data) {
         echo "Error al eliminar usuario.";
     }
 }
+
+/*Página: Mi cuenta*/
 function consultarUsuario($id) {
     global $conexion;
     $sql = "SELECT * FROM users WHERE id = ?";
@@ -117,6 +121,7 @@ function consultarUsuario($id) {
     }
 }
 
+/*Página: usuarios/administrar */
 function consultarUsuarios($search = '') {
     global $conexion;
     

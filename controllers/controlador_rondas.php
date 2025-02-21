@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-
+/*Página: Rondas Ventana: Crear ronda*/
 function insertarRonda($data) {
     global $conexion;
 
@@ -29,12 +29,14 @@ function insertarRonda($data) {
     $stage = $data['stage'];
     $start_date = $data['start_date'];
     $end_date = $data['end_date'];
+    $end_time = $data['end_time'];
+    $end_datetime = $end_date . ' ' . $end_time . ':00';
     $status = 'inactive'; // Estado por defecto
-
+    
     // Insertar la nueva ronda
     $sql = "INSERT INTO rounds (name, stage, start_date, end_date, status) VALUES (?, ?, ?, ?, ?)";
     $stmt = $conexion->prepare($sql);
-    $stmt->bind_param("sssss", $name, $stage, $start_date, $end_date, $status);
+    $stmt->bind_param("sssss", $name, $stage, $start_date, $end_datetime, $status);
 
     if ($stmt->execute()) {
         $round_id = $stmt->insert_id; // Obtener el ID de la ronda creada
@@ -56,6 +58,7 @@ function insertarRonda($data) {
 }
 
 /**
+ * Página: Rondas Ventana: Gestionar rondas
  *  Actualizar el estado de una ronda (activar/inactivar/finalizar)
  */
 function actualizarRonda($id, $status) {
@@ -73,9 +76,7 @@ function actualizarRonda($id, $status) {
     }
 }
 
-/**
- *  Eliminar una ronda por ID
- */
+/* Página: Rondas Ventana: Gestionar rondas */
 function eliminarRonda($id) {
     global $conexion;
 
@@ -91,20 +92,17 @@ function eliminarRonda($id) {
     }
 }
 
-/**
- *  Consultar todas las rondas activas
- */
+/*Página: Rondas Ventana: Gestionar rondas*/
 function obtenerRondasConTemas() {
     global $conexion;
-
     $sql = "SELECT id, name, stage, DATE_FORMAT(start_date, '%d-%m-%Y') AS start_date, 
-                   DATE_FORMAT(end_date, '%d-%m-%Y') AS end_date, status 
+                   DATE_FORMAT(end_date, '%d-%m-%Y') AS end_date, 
+                   DATE_FORMAT(end_date, '%H:%i') AS end_time, status 
             FROM rounds ORDER BY start_date DESC";
     $result = $conexion->query($sql);
     $rondas = [];
 
     while ($ronda = $result->fetch_assoc()) {
-        // Obtener los temas y sus votos para cada ronda
         $temasSql = "SELECT t.topic, 
                             (SELECT COUNT(*) FROM votes v WHERE v.topic_id = t.id) AS votos
                      FROM topics t
@@ -118,10 +116,8 @@ function obtenerRondasConTemas() {
 
         $temas = [];
         while ($tema = $temasResult->fetch_assoc()) {
-            $temas[] = $tema; // Incluye tema y número de votos
+            $temas[] = $tema; 
         }
-
-        // Agregar los temas y votos a la ronda
         $ronda['temas'] = $temas;
         $rondas[] = $ronda;
     }
@@ -129,6 +125,7 @@ function obtenerRondasConTemas() {
     return $rondas;
 }
 
+/*Página: Index */
 function obtenerRondaActiva() {
     global $conexion;
 
@@ -144,7 +141,7 @@ function obtenerRondaActiva() {
     $result = $conexion->query($sql);
 
     if (!$result) {
-        die("Error en la consulta: " . $conexion->error); // Para depuración
+        die("Error en la consulta: " . $conexion->error); 
     }
 
     $ronda = [];
@@ -158,7 +155,6 @@ function obtenerRondaActiva() {
             'topics' => []
         ];
 
-        // Obtener todos los temas de la ronda activa
         do {
             if ($row['topic_id']) {
                 $ronda['topics'][] = [
@@ -170,7 +166,19 @@ function obtenerRondaActiva() {
         } while ($row = $result->fetch_assoc());
     }
 
-    return $ronda; // Devuelve el array con los datos
+    return $ronda; 
 }
 
+/* Página: Index Estado: Resultados */
+function obtenerUltimaRondaActiva() {
+    global $conexion;
+
+    $sql = "SELECT id, name, stage FROM rounds 
+            WHERE status IN ('active', 'finished') 
+            ORDER BY end_date DESC LIMIT 1";
+    $stmt = $conexion->prepare($sql);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    return $result->fetch_assoc() ?: null;
+}
 ?>

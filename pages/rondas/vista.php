@@ -16,7 +16,7 @@ $activeTab = isset($_COOKIE["rondas_tab"]) ? json_decode($_COOKIE["rondas_tab"],
     <!-- Menú de pestañas -->
     <ul class="nav nav-tabs" id="rondasTabs">
         <li class="nav-item">
-            <a class="nav-link <?= ($activeTab == 'gestionar') ? 'active' : '' ?>" id="gestionar-tab" data-bs-toggle="tab" href="#gestionar"><i class="fa-solid fa-arrows-rotate"></i> Gestionar Rondas</a>
+            <a class="nav-link <?= ($activeTab == 'gestionar') ? 'active' : '' ?>" id="gestionar-tab" data-bs-toggle="tab" href="#gestionar"><i class="fa fa-tasks" aria-hidden="true"></i>Gestionar Rondas</a>
         </li>
         <li class="nav-item">
             <a class="nav-link <?= ($activeTab == 'nueva') ? 'active' : '' ?>" id="nueva-tab" data-bs-toggle="tab" href="#nueva"><i class="fa-solid fa-plus"></i> Crear Ronda</a>

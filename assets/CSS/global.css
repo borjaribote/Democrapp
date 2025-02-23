@@ -43,8 +43,15 @@ body .btn-primary{
 
 
 /*Nav*/
-.navbar .greek{
+.navbar-text{
+    text-decoration: none;
+}
+.greek{
     font-family: 'Greek' !important;
+    font-size: 1.5em;
+}
+.greek-outline{
+    font-family: 'Greek_outline' !important;
     font-size: 1.5em;
 }
 
@@ -63,6 +70,15 @@ a:hover {
 }
 a{
     text-decoration: none;
+}
+/*Main*/
+
+.card-title .greek span{
+    font-family: 'Greek' !important;
+    font-size: 5.5em;
+}
+body section .titulo-ronda p{
+    font-size: 16px;
 }
 /*Forms*/
   .required:after {
@@ -116,7 +132,6 @@ th, td {
     padding: 8px;
     white-space: nowrap;
     overflow: auto;
-    text-overflow: ellipsis;
     max-width: 300px;
 } 
 
@@ -352,4 +367,16 @@ body section .titulo-ronda{
 
 .input-group .btn-primary:hover {
     background-color: #0056b3;
+}
+
+.modal .list-group-item{
+    display: flex;
+    justify-content: space-between;
+}
+
+.modal .list-group-item span:nth-child(1){
+    text-align: left;
+    text-overflow: ellipsis;
+    width: 340px !important;
+    overflow: hidden;
 }

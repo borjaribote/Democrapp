@@ -274,3 +274,7 @@ DELIMITER ;
         SELECT 1 FROM users WHERE email = 'admin@democrapp.com' AND is_admin = TRUE
     );
 
+
+Y aparte dame las querys que necesito. 
+
+Si consideras que hay algo que hago mal o que va a ser mas facil de otra manera consultamelo o sugiereme algún cambio antes de pasarme ningún código. 

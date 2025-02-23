@@ -36,9 +36,7 @@ if (!defined('INIT_LOADED')) {
                         <li class="nav-item">
                             <a class="nav-link" href="<?= BASE_URL ?>pages/temas/mis_temas.php">Mis temas</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="<?= BASE_URL ?>pages/usuarios/micuenta.php">Mi cuenta</a>
-                        </li>
+                        
                     <?php endif; ?>
                     <?php if(isset($_SESSION['is_admin'])): ?>
                     <li class="nav-item dropdown">
@@ -55,8 +53,10 @@ if (!defined('INIT_LOADED')) {
                 </ul>
                 <div class="d-flex">
                     <?php if(isset($_SESSION['user_id'])): ?>
-                      
-                        <span class="navbar-text me-3">Hola, <?= $_SESSION['user_name'] ?></span>
+                        <div class="d-flex align-items-end">
+                            <a class="navbar-text me-3" href="<?= BASE_URL ?>pages/usuarios/micuenta.php"><span class="navbar-text"><?= $_SESSION['user_name'] ?></span>
+                            <i class="fa-solid fa-user"></i></a>
+                        </div>
                         <a href="<?= BASE_URL ?>functions/user_auth.php" class="btn btn-danger">Cerrar sesión</a>
                     <?php else: ?>
                         <a href="<?= BASE_URL ?>index.php" class="btn btn-primary me-2">Login</a>

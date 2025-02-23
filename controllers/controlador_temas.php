@@ -18,6 +18,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         case 'delete':
             eliminarTema($_POST['topic_id']);
             break;
+        case 'eliminarTodos':
+            eliminarTodos();
+            break;
         default:
             echo "Acción no válida.";
     }
@@ -81,30 +84,80 @@ function eliminarTema($id) {
         echo "Error al eliminar tema.";
     }
 }
+/*Página: Temas Ventana:Aprobar temas */
+function eliminarTodos() {
+    global $conexion;
+
+    $sql = "DELETE FROM topics";
+    $stmt = $conexion->prepare($sql);
+
+    if ($stmt->execute()) {
+        header("Location: " . BASE_URL . "pages/temas/vista.php");
+        exit();  
+    } else {
+        echo "Error al eliminar todos los temas.";
+    }
+}
+/* Página: Temas Ventana: Borrar temas */
+function consultarTemas() {
+    global $conexion;
+
+    $allowed_columns = ["title", "topic", "created_at", "stage"];
+    $allowed_directions = ["ASC", "DESC"];
+    $order = isset($_GET['order']) && in_array($_GET['order'], $allowed_columns) ? $_GET['order'] : "created_at";
+    $direction = isset($_GET['direction']) && in_array($_GET['direction'], $allowed_directions) ? $_GET['direction'] : "DESC";
+    $new_direction = ($direction === "ASC") ? "DESC" : "ASC";
+    $sql = "SELECT t.*, 
+                   COALESCE(r.stage, 'No asignado') AS last_stage
+            FROM topics t
+            LEFT JOIN topic_rounds tr ON t.id = tr.topic_id
+            LEFT JOIN rounds r ON tr.round_id = r.id
+            GROUP BY t.id
+            ORDER BY $order $direction";
+
+    $result = $conexion->query($sql);
+    if (!$result) {
+        die("Error en la consulta: " . $conexion->error);
+    }
+    $temas = [];
+    while ($row = $result->fetch_assoc()) {
+        $temas[] = $row;
+    }
+    return [$temas, $new_direction]; 
+}
+
+
 
 /*Página: Mis temas */
 function consultarDatosTemas($id) {
     global $conexion;
 
     $sql = "SELECT 
-    t.topic, 
-    t.is_approved, 
-    CASE 
-        WHEN t.is_approved = 1 THEN 'Aprobado'
-        WHEN t.is_approved = 0 THEN 'Pendiente'
-        ELSE 'Desconocido'
-    END AS estado_tema, 
-    r.stage, 
-    COALESCE(v.total_votes, 0) AS total_votes
-FROM topics t
-LEFT JOIN topic_rounds tr ON t.id = tr.topic_id
-LEFT JOIN rounds r ON tr.round_id = r.id
-LEFT JOIN (
-    SELECT topic_id, COUNT(*) AS total_votes 
-    FROM votes 
-    GROUP BY topic_id
-) v ON t.id = v.topic_id
-WHERE t.user_id = ?";
+                t.id, 
+                t.topic, 
+                t.is_approved, 
+                CASE 
+                    WHEN t.is_approved = 1 THEN 'Aprobado'
+                    WHEN t.is_approved = 0 THEN 'Pendiente'
+                    ELSE 'Desconocido'
+                END AS estado_tema, 
+                IFNULL(
+                    (SELECT GROUP_CONCAT(DISTINCT r.stage SEPARATOR ', ') 
+                     FROM topic_rounds tr 
+                     JOIN rounds r ON tr.round_id = r.id 
+                     WHERE tr.topic_id = t.id), 
+                    'Sin fase'
+                ) AS stage, 
+                COALESCE(v.total_votes, 0) AS total_votes, 
+                COALESCE(v.total_puntos, 0) AS total_puntos
+            FROM topics t
+            LEFT JOIN (
+                SELECT topic_id, COUNT(*) AS total_votes, SUM(value) AS total_puntos
+                FROM votes 
+                GROUP BY topic_id
+            ) v ON t.id = v.topic_id
+            WHERE t.user_id = ?
+            GROUP BY t.id, t.topic, t.is_approved";
 
     $stmt = $conexion->prepare($sql);
     $stmt->bind_param("i", $id);
@@ -112,14 +165,13 @@ WHERE t.user_id = ?";
     $result = $stmt->get_result();
 
     $temas = [];
-    if ($result->num_rows > 0) {
-        while ($row = $result->fetch_assoc()) {
-            $temas[] = $row;
-        }
+    while ($row = $result->fetch_assoc()) {
+        $temas[] = $row;
     }
     
     return $temas;
 }
+
 
 /*Página: Temas Ventana:Aprobar temas */
 function consultarTemasPendientes() {

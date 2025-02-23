@@ -17,17 +17,9 @@ addEventListener("DOMContentLoaded", () => {
     if (document.getElementById("confirmAdminModal")) {
         setupAdminModal(document.getElementById("confirmAdminModal"));
     }
-    //Activar formulario edicion usuario
-    if (document.getElementById("enableEdit")) {
-        userUpdate(document.getElementById("enableEdit"));
-    }
     if (document.getElementById("viewTopicInfo")) {
         viewTopicInfo(document.getElementById("viewTopicInfo"));
     }
-    if (document.querySelector('select[name="stage"]')) {
-        showHideTopicsOnStageMenu(document.querySelector('select[name="stage"]'));
-    }
-   
 });
 
 
@@ -48,19 +40,7 @@ function createCookie (element, page) {
     });
 }
 
-/* actualizar datos usuario */
-function userUpdate(element){
-    element.addEventListener("change", function() {
-    let isEnabled = this.checked;
 
-    document.getElementById("name").disabled = !isEnabled;
-    document.getElementById("email").disabled = !isEnabled;
-    document.getElementById("password").disabled = !isEnabled;
-    document.getElementById("user_save").disabled = !isEnabled;
-    document.getElementById("user_delete").disabled = !isEnabled;
-});
-
-}
 
 /*Modal de confirmación para dar o quitar permisos administrador a un usuario */
 function setupAdminModal(modal) {
@@ -112,16 +92,5 @@ function viewTopicInfo(modal) {
     });
 }
 
-function showHideTopicsOnStageMenu (stage){
-    stage.addEventListener('change', function() {
-        var topicsContainer = document.getElementById('topics-container');
-        if (this.value != 'proposals') {
-            topicsContainer.style.display = 'block';
-            topicsContainer.querySelector('select[name="topics[]"]').setAttribute('required', '');
-        } else {
-            topicsContainer.style.display = 'none';
-            topicsContainer.querySelector('select[name="topics[]"]').removeAttribute('required');
-        }
-    });
-}
+
 

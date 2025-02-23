@@ -3,32 +3,46 @@ if (!defined('INIT_LOADED')) {
     define('INIT_LOADED', true);
     require_once __DIR__ . '/../core/init.php';
 }
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $user_id = $_SESSION['user_id'] ?? null;
-    $round_id = $_POST['round_id'] ?? null;
-    $votes = $_POST['votes'] ?? [];
+    $user_id =  $_POST['user_id'];
+    $round_id = $_POST['round_id'];
+    $votes = [];
+    // Crear el array votes desde los inputs token-1, token-2, token-3
+    if (!empty($_POST['token-3'])) {
+        $votes[$_POST['token-3']] = 3;
+    }
+    if (!empty($_POST['token-2'])) {
+        $votes[$_POST['token-2']] = 2;
+    }
+    if (!empty($_POST['token-1'])) {
+        $votes[$_POST['token-1']] = 1;
+    }
 
+    // Validar que los datos son correctos
     if (!$user_id || !$round_id || count($votes) !== 3) {
-        header("Location: " . BASE_URL . "index.php?mensaje=error_voto");
-        exit();
+        echo "<br>";
+        echo "errror1";
+/*         header("Location: " . BASE_URL . "index.php?mensaje=error_voto");
+ */        exit();
     }
 
     guardarVotos($user_id, $round_id, $votes);
 }
 
-/**
- * Función para guardar los votos en la base de datos
- */
 function guardarVotos($user_id, $round_id, $votes) {
     global $conexion;
 
     $conexion->begin_transaction(); // Iniciar transacción
     try {
-        foreach ($votes as $topic_id => $points) {
-            $sql = "INSERT INTO votes (user_id, topic_id, round_id, points) VALUES (?, ?, ?, ?)";
+        foreach ($votes as $topic_id => $value) {
+            // Evitar que se envíen valores vacíos o incorrectos
+            if (!is_numeric($topic_id) || !is_numeric($value) || $value < 1 || $value > 3) {
+                throw new Exception("Datos inválidos");
+            }
+
+            $sql = "INSERT INTO votes (user_id, topic_id, round_id, value) VALUES (?, ?, ?, ?)";
             $stmt = $conexion->prepare($sql);
-            $stmt->bind_param("iiii", $user_id, $topic_id, $round_id, $points);
+            $stmt->bind_param("iiii", $user_id, $topic_id, $round_id, $value);
             $stmt->execute();
         }
         
@@ -80,6 +94,8 @@ function obtenerGanadorRonda($round_id) {
     return $result->fetch_assoc() ?: null;
 }
 
+
+/*No devuelve el total de los votos */
 function obtenerResultadosRonda($round_id) {
     global $conexion;
     if (!$round_id) return [];

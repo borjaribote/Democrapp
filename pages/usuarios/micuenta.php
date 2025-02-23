@@ -37,7 +37,7 @@ $user = consultarUsuario($_SESSION['user_id']);
                             <label for="password" class="form-label">Nueva contraseña (opcional)</label>
                             <input type="password" id="password" name="password" class="form-control" disabled>
                         </div>
-                        <button type="submit" id="user_save" class="btn btn-success w-100" disabled> Guardar Cambios</button>         
+                        <button type="submit" id="user_save" class="btn btn-primary w-100" disabled> Guardar Cambios</button>         
                     </form>
                     <?php if (!isset($_SESSION['is_admin'])): ?>
                         <button id="user_delete" type="button" class="btn btn-danger w-100 mt-3" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" disabled> Eliminar Cuenta</button>

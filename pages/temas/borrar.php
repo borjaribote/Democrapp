@@ -1,11 +1,11 @@
 <?php
-list($result, $new_direction) = consultarTemasPendientes(); // Recibimos la nueva dirección
+list($result, $new_direction) = consultarTemas(); // Recibimos la nueva dirección
 
 // Determinar el orden actual y la nueva dirección
 $current_order = $_GET['order'] ?? '';
 $new_direction = ($_GET['direction'] ?? 'ASC') === 'ASC' ? 'DESC' : 'ASC';
 // Definir iconos solo para el elemento activo
-$title_icon = ($current_order === 'title') ? ($new_direction === "ASC" ? 'fa-angle-up' : 'fa-angle-down') : 'fa-angle-left';
+$stage_icon = ($current_order === 'stage') ? ($new_direction === "ASC" ? 'fa-angle-up' : 'fa-angle-down') : 'fa-angle-left';
 $topic_icon = ($current_order === 'topic') ? ($new_direction === "ASC" ? 'fa-angle-up' : 'fa-angle-down') : 'fa-angle-left';
 $created_icon = ($current_order === 'created_at') ? ($new_direction === "ASC" ? 'fa-angle-up' : 'fa-angle-down') : 'fa-angle-left';
 
@@ -13,7 +13,7 @@ $created_icon = ($current_order === 'created_at') ? ($new_direction === "ASC" ? 
 ?>
 
 <div class="container my-5">
-    <h2 class="mb-4">Lista de temas por moderar</h2>
+    <h2 class="mb-4">Lista de temas aprobados</h2>
 
     <!-- Formulario de Búsqueda -->
     <form method="GET" action="" class="mb-4">
@@ -30,15 +30,15 @@ $created_icon = ($current_order === 'created_at') ? ($new_direction === "ASC" ? 
     <?php if (!empty($result) && is_array($result)): ?>
         <table class="table table-bordered table-striped table-hover">
         <thead class="thead-dark">
-            <tr>
-                <th class="<?= ($current_order === 'title') ? 'sorted-column' : '' ?>">
-                    <a href="?order=title&direction=<?= $new_direction ?>" class="text-decoration-none text-dark">
-                        Título <?php if ($title_icon) : ?><i class="fa <?= $title_icon ?>"></i><?php endif; ?>
-                    </a>
-                </th>
+            <tr>         
                 <th class="<?= ($current_order === 'topic') ? 'sorted-column' : '' ?>">
                     <a href="?order=topic&direction=<?= $new_direction ?>" class="text-decoration-none text-dark">
                         Tema <?php if ($topic_icon) : ?><i class="fa <?= $topic_icon ?>"></i><?php endif; ?>
+                    </a>
+                </th>
+                <th class="<?= ($current_order === 'stage') ? 'sorted-column' : '' ?>">
+                    <a href="?order=stage&direction=<?= $new_direction ?>" class="text-decoration-none text-dark">
+                        Fase <?php if ($stage_icon) : ?><i class="fa <?= $stage_icon ?>"></i><?php endif; ?>
                     </a>
                 </th>
                 <th class="<?= ($current_order === 'created_at') ? 'sorted-column' : '' ?>">
@@ -54,8 +54,8 @@ $created_icon = ($current_order === 'created_at') ? ($new_direction === "ASC" ? 
         <tbody>
             <?php foreach ($result as $row): ?>
                 <tr>
-                    <td><?php echo htmlspecialchars($row['title']); ?></td>
                     <td><?php echo htmlspecialchars($row['topic']); ?></td>
+                    <td><?php echo htmlspecialchars($row['last_stage']); ?></td>
                     <td><?php echo date("Y-m-d", strtotime($row['created_at'])); ?></td>
                     <td><button type="button" class="btn btn-secondary btn-sm" 
                     data-bs-toggle="modal" 
@@ -71,14 +71,28 @@ $created_icon = ($current_order === 'created_at') ? ($new_direction === "ASC" ? 
                     <td>
                         <form method="POST" action="<?= BASE_URL ?>controllers/controlador_temas.php" class="d-inline">
                             <input type="hidden" name="topic_id" value="<?php echo $row['id']; ?>">
-                            <button type="submit" name="action" value="update" class="btn btn-success btn-sm">Aprobar</button>
                             <button type="submit" name="action" value="delete" class="btn btn-danger btn-sm">Eliminar</button>
                         </form>
                     </td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
-        </table>
+        <thead class="thead-light">
+            <tr class="table-active">         
+                <th colspan="4">
+                    <span>Eliminar todos los temas</span>
+                    <input type="checkbox" id="selectAll" onclick="activarEliminar()">
+                </th>      
+                <th >
+                    <form method="POST" action="<?= BASE_URL ?>controllers/controlador_temas.php" class="d-inline">
+                                <input type="hidden" name="topic_id" value="<?php echo $row['id']; ?>">
+                                <button id="deleteAll" type="submit" name="action" value="eliminarTodos" disabled class="btn btn-danger btn-sm">Eliminar</button>
+                    </form>
+                </th>
+            </tr>
+        </thead>
+
+                 </table>
     <?php else: ?>
         <div class="alert alert-info text-center" role="alert">
             <p>No hay temas pendientes de moderación.</p>

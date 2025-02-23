@@ -24,6 +24,9 @@ switch ($mensaje) {
     case 'tema_duplicado':
         echo '<div class="alert alert-danger text-center" role="alert"> Error de registro: El tema <strong>' . $value . '</strong> se ha registrado anteriormente.</div>';
         break;
+    case 'voto_guardado':
+        echo '<div class="alert alert-success text-center">La votación se ha procesado correctamente</div>';
+        break;
     default:
         break;
 }

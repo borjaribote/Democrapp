@@ -8,28 +8,27 @@
                     <form action="<?= BASE_URL ?>controllers/controlador_rondas.php" method="POST">
                         <input type="hidden" name="action" value="insert">
                         <div class="mb-3">
-                            <label class="form-label required">Título</label>
-                            <input type="text" name="name" class="form-control" placeholder="Título con el que se mostrará la fase" required>
-                        </div> 
-                        <div class="mb-3">
                             <label class="form-label required">Tipo de Fase</label>
                             <select class="form-select" name="stage" aria-label="Default select example" required>
                                 <option value="" disabled selected>Seleccione la fase</option>
                                 <option value="propuestas">Propuestas</option>
-                                <option value="clasificacion">Clasificación</option>
+                                <option value="clasificatoria">Clasificación</option>
                                 <option value="final">Final</option>
                                 <option value="desempate">Desempate</option>
                             </select>
                         </div>
-                    <div class="mb-3">
-                        <label class="form-label required">Fecha de Inicio</label>
-                        <input type="date" name="start_date" class="form-control" required id="start_date">
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label required">Fecha de Fin</label>
-                        <input type="date" name="end_date" class="form-control" required id="end_date">
-                    </div>
+                        <div class="mb-3">
+                            <label class="form-label required">Fecha de Inicio</label>
+                            <input type="date" name="start_date" class="form-control" required id="start_date">
+                        </div>
+                        <div class="mb-3">
+                                <label class="form-label required">Hora Inicio</label>
+                                <input type="time" name="start_time" class="form-control" required>
+                            </div>
+                        <div class="mb-3">
+                            <label class="form-label required">Fecha de Fin</label>
+                            <input type="date" name="end_date" class="form-control" required id="end_date">
+                        </div>
                         <div class="mb-3">
                             <label class="form-label required">Hora Fin</label>
                             <input type="time" name="end_time" class="form-control" required>

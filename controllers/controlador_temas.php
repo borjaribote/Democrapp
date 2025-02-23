@@ -224,11 +224,11 @@ function consultarTemasAprobadosOrdenado() {
 }
 
 /*Página: Rondas Ventana:Crear ronda Fase: Clasificación */
-function consultarTemasAprobados() {
+function consultarTemasPorClasificarse() {
     global $conexion;
     
     $order_by = "created_at DESC"; 
-    $sql = "SELECT * FROM topics WHERE is_approved = TRUE  ORDER BY $order_by";
+    $sql = "SELECT * FROM topics WHERE is_approved = TRUE AND disqualified = FALSE AND finalist = FALSE ORDER BY $order_by";
     $result = $conexion->query($sql);
     
     $temas = [];
@@ -272,6 +272,81 @@ function obtenerTemasRondaActiva() {
     }
 
     return $temas;
+}
+
+/*Página: Temas Ventana: Clasificados */
+function temasClasificadosOrdenado() {
+    global $conexion;
+
+    // Obtener parámetros de ordenación
+    $order = $_GET['order'] ?? 'total_puntos'; // Orden predeterminado por puntos
+    $direction = ($_GET['direction'] ?? 'DESC') === 'ASC' ? 'ASC' : 'DESC'; // Dirección
+
+    // Permitir solo ciertos valores para evitar SQL Injection
+    $allowed_columns = ['topic', 'total_votos', 'total_puntos'];
+    if (!in_array($order, $allowed_columns)) {
+        $order = 'total_puntos';
+    }
+
+    $sql = "SELECT t.id, t.topic, t.description, 
+                   COALESCE(SUM(v.value), 0) AS total_puntos,
+                   COUNT(v.id) AS total_votos
+            FROM topics t
+            LEFT JOIN votes v ON t.id = v.topic_id
+            WHERE t.finalist = 1
+            GROUP BY t.id, t.topic, t.description
+            ORDER BY $order $direction";
+
+    $result = $conexion->query($sql);
+
+    $temas = [];
+    while ($row = $result->fetch_assoc()) {
+        $temas[] = $row;
+    }
+
+    return [$temas, $direction];
+}
+
+/*Página: Rondas Ventana: Crear */
+function temasClasificados() {
+    global $conexion;
+
+    $sql = "SELECT t.id, t.topic, t.description, 
+                   COALESCE(SUM(v.value), 0) AS total_puntos,
+                   COUNT(v.id) AS total_votos
+            FROM topics t
+            LEFT JOIN votes v ON t.id = v.topic_id
+            WHERE t.finalist = 1
+            GROUP BY t.id, t.topic, t.description";
+
+    $result = $conexion->query($sql);
+
+    $temas = [];
+    while ($row = $result->fetch_assoc()) {
+        $temas[] = $row;
+    }
+
+    return $temas;
+}
+
+/*Página: Index */
+function obtenerGanador() {
+    global $conexion;
+
+    $sql = "SELECT id, topic, description 
+            FROM topics 
+            WHERE winner = TRUE";
+
+    $stmt = $conexion->prepare($sql);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    $ganadores = [];
+    while ($row = $result->fetch_assoc()) {
+        $ganadores[] = $row;
+    }
+
+    return $ganadores;
 }
 
 ?>

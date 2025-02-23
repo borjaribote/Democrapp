@@ -204,4 +204,43 @@ function obtenerRondaActiva() {
     return $ronda; 
 }
 
+function obtenerResultadosRonda($round_id) {
+    global $conexion;
+    if (!$round_id) return [];
 
+    $sql = "SELECT t.id AS topic_id, 
+                   t.title AS topic_title, 
+                   t.topic AS topic, 
+                   COALESCE(SUM(v.value), 0) AS total_points 
+            FROM topics t
+            LEFT JOIN votes v ON t.id = v.topic_id AND v.round_id = ?
+            WHERE t.id IN (SELECT topic_id FROM topic_rounds WHERE round_id = ?)
+            GROUP BY t.id, t.title, t.topic
+            ORDER BY total_points DESC"; 
+
+    $stmt = $conexion->prepare($sql);
+    $stmt->bind_param("ii", $round_id, $round_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    $resultados = [];
+    while ($row = $result->fetch_assoc()) {
+        $resultados[] = $row;
+    }
+
+    return $resultados;
+}
+/* Página: Index Estado: Resultados */
+function obtenerUltimaRondaActiva() {
+    global $conexion;
+
+    $sql = "SELECT id, stage FROM rounds 
+            WHERE status IN ('active', 'finished') 
+            ORDER BY end_date DESC LIMIT 1";
+    $stmt = $conexion->prepare($sql);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    return $result->fetch_assoc() ?: null;
+}
+
+?>

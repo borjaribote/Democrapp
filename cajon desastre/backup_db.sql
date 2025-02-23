@@ -1,21 +1,4 @@
-vale entonces necesito:
 
-1º el trigger de la ronda de clasificados. 
-Lo dicho se clasifican todos los que empaten con el 1º o con el 2º en cantidad de puntos, no en cantidad de votos. 
-
-2º Tigger de la ronda final: 
- - Gana el que mas puntos saque.
- - Si hay empate gana el que mas puntos haya obtenido en rondas previas. 
- - Si aun así hay dos temas con los mismos puntos totales gana el que mas votos haya tenido. 
- - Y si los dos tienen los mismos votos, ganan los dos temas. 
-
-3º dame de nuevo la nueva tabla votes_history y su trigger. 
-
-4º No me haría falta la tabla desempate y estoy pensando eliminar tambien clasificados y simplemente poner un campo que sea finalista y sea true o false y otro campo que sea winner. 
-
-
-Para que no me haga mucho lío, mandamelo todo hecho please. 
-Actualizame la base de datos: 
     -- Crear la base de datos con codificación UTF-8 BIN
     DROP DATABASE IF EXISTS DemocrApp;
 
@@ -273,8 +256,3 @@ DELIMITER ;
     WHERE NOT EXISTS (
         SELECT 1 FROM users WHERE email = 'admin@democrapp.com' AND is_admin = TRUE
     );
-
-
-Y aparte dame las querys que necesito. 
-
-Si consideras que hay algo que hago mal o que va a ser mas facil de otra manera consultamelo o sugiereme algún cambio antes de pasarme ningún código. 

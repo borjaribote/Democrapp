@@ -7,7 +7,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . "/proyectos/Democrapp/core/config.php";
 $servername = "localhost";
 $username = "root";
 $password = "";
-$database = "DemocrApp2";
+$database = "DemocrApp";
 
 $conexion = new mysqli($servername, $username, $password, $database);
 

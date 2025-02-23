@@ -4,9 +4,8 @@ accesoAutorizado("admin");
 require_once  BASE_PATH.'/controllers/controlador_rondas.php';
 require_once  BASE_PATH.'/controllers/controlador_temas.php';
 require_once BASE_PATH.'/functions/gestion_mensajes.php';
-$temasAprobados = consultarTemasAprobados();
-/* $temasClasificados = consultarTemasAprobados();
-$temasEmpatados = consultarTemasAprobados(); */
+$temasAprobados = consultarTemasPorClasificarse();
+$temasFinalistas = temasClasificados(); 
 $activeTab = isset($_COOKIE["rondas_tab"]) ? json_decode($_COOKIE["rondas_tab"], true)["tab"] : "gestionar"; 
 ?>
 

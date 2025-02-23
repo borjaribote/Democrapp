@@ -1,5 +1,5 @@
 <?php
-list($result, $new_direction) = consultarTemasAprobadosOrdenado(); // Recibimos la nueva dirección
+list($result, $new_direction) = consultarTemasPorClasificarseOrdenado(); // Recibimos la nueva dirección
 
 // Determinar el orden actual y la nueva dirección
 $current_order = $_GET['order'] ?? '';

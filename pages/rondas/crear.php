@@ -12,10 +12,9 @@
                             <select class="form-select" name="stage" aria-label="Default select example" required>
                                 <option value="" disabled selected>Seleccione la fase</option>
                                 <option value="propuestas">Propuestas</option>
-                                <option value="clasificatoria">Clasificación</option>
+                                <option value="clasificatoria">Clasificatoria</option>
                                 <option value="final">Final</option>
-                                <option value="desempate">Desempate</option>
-                            </select>
+                           </select>
                         </div>
                         <div class="mb-3">
                             <label class="form-label required">Fecha de Inicio</label>
@@ -34,10 +33,19 @@
                             <input type="time" name="end_time" class="form-control" required>
                         </div>
 
-                        <div id="topics-container" style="display: none;">
+                        <div id="lista-aprobados" style="display: none;">
                             <label class="form-label required">Selecciona los temas</label>
                             <select name="topics[]" class="form-control" multiple >
                                 <?php foreach ($temasAprobados as $tema): ?>
+                                    <option value="<?= $tema['id']; ?>"><?= htmlspecialchars($tema['topic']); ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                            <small class="text-muted">Mantén presionada la tecla Ctrl (Cmd en Mac) para seleccionar varios temas.</small>
+                        </div>                    
+                        <div id="lista-finalistas" style="display: none;">
+                            <label class="form-label required">Selecciona los temas</label>
+                            <select name="topics[]" class="form-control" multiple >
+                                <?php foreach ($temasFinalistas as $tema): ?>
                                     <option value="<?= $tema['id']; ?>"><?= htmlspecialchars($tema['topic']); ?></option>
                                 <?php endforeach; ?>
                             </select>

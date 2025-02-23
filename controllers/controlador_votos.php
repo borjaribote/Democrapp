@@ -7,7 +7,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user_id =  $_POST['user_id'];
     $round_id = $_POST['round_id'];
     $votes = [];
-    // Crear el array votes desde los inputs token-1, token-2, token-3
     if (!empty($_POST['token-3'])) {
         $votes[$_POST['token-3']] = 3;
     }
@@ -20,10 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Validar que los datos son correctos
     if (!$user_id || !$round_id || count($votes) !== 3) {
-        echo "<br>";
-        echo "errror1";
-/*         header("Location: " . BASE_URL . "index.php?mensaje=error_voto");
- */        exit();
+        exit();
     }
 
     guardarVotos($user_id, $round_id, $votes);
@@ -31,11 +27,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 function guardarVotos($user_id, $round_id, $votes) {
     global $conexion;
-
-    $conexion->begin_transaction(); // Iniciar transacción
+    $conexion->begin_transaction(); 
     try {
         foreach ($votes as $topic_id => $value) {
-            // Evitar que se envíen valores vacíos o incorrectos
             if (!is_numeric($topic_id) || !is_numeric($value) || $value < 1 || $value > 3) {
                 throw new Exception("Datos inválidos");
             }
@@ -44,13 +38,12 @@ function guardarVotos($user_id, $round_id, $votes) {
             $stmt = $conexion->prepare($sql);
             $stmt->bind_param("iiii", $user_id, $topic_id, $round_id, $value);
             $stmt->execute();
-        }
-        
-        $conexion->commit(); // Confirmar transacción
+        }     
+        $conexion->commit(); 
         header("Location: " . BASE_URL . "index.php?mensaje=voto_guardado");
         exit();
     } catch (Exception $e) {
-        $conexion->rollback(); // Revertir transacción en caso de error
+        $conexion->rollback(); 
         header("Location: " . BASE_URL . "index.php?mensaje=error_voto");
         exit();
     }
@@ -94,29 +87,5 @@ function obtenerGanadorRonda($round_id) {
     return $result->fetch_assoc() ?: null;
 }
 
-
-/*No devuelve el total de los votos */
-function obtenerResultadosRonda($round_id) {
-    global $conexion;
-    if (!$round_id) return [];
-
-    $sql = "SELECT t.id AS topic_id, t.title AS topic_title, t.topic AS topic, COUNT(v.user_id) AS total_votes
-            FROM topics t
-            LEFT JOIN votes v ON t.id = v.topic_id
-            WHERE t.id IN (SELECT topic_id FROM topic_rounds WHERE round_id = ?)
-            GROUP BY t.id, t.title, t.topic
-            ORDER BY total_votes DESC";
-    $stmt = $conexion->prepare($sql);
-    $stmt->bind_param("i", $round_id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    $resultados = [];
-    while ($row = $result->fetch_assoc()) {
-        $resultados[] = $row;
-    }
-
-    return $resultados;
-}
 
 

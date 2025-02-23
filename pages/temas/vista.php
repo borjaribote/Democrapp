@@ -18,9 +18,7 @@ $activeTab = isset($_COOKIE["temas_tab"]) ? json_decode($_COOKIE["temas_tab"], t
         <li class="nav-item">
             <a class="nav-link <?= ($activeTab == 'aprobados') ? 'active' : '' ?>" id="aprobados-tab" data-bs-toggle="tab" href="#aprobados"><i class="fa fa-thumbs-up" aria-hidden="true"></i>            </i> Temas aprobados</a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link <?= ($activeTab == 'empatados') ? 'active' : '' ?>" id="empatados-tab" data-bs-toggle="tab" href="#empatados"><i class="fa-regular fa-handshake"></i> Temas empatados</a>
-        </li>
+
         <li class="nav-item">
             <a class="nav-link <?= ($activeTab == 'clasificados') ? 'active' : '' ?>" id="clasificados-tab" data-bs-toggle="tab" href="#clasificados"><i class="fa-solid fa-trophy"></i> Temas clasificados</a>
         </li>
@@ -40,10 +38,6 @@ $activeTab = isset($_COOKIE["temas_tab"]) ? json_decode($_COOKIE["temas_tab"], t
         <!-- 🔹 Pestaña: aprobados Temas -->
         <div class="tab-pane fade <?= ($activeTab == 'aprobados') ? 'active show' : '' ?>" id="aprobados">
             <?php include BASE_PATH.'pages/temas/aprobados.php'; ?> 
-        </div>
-        <!-- 🔹 Pestaña: empatados Temas -->
-        <div class="tab-pane fade <?= ($activeTab == 'empatados') ? 'active show' : '' ?>" id="empatados">
-            <?php include BASE_PATH.'pages/temas/empatados.php'; ?> 
         </div>
 
         <!-- 🔹 Pestaña: Temas clasificados -->

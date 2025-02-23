@@ -1,6 +1,6 @@
 
 <?php 
-$resultados = obtenerResultadosRonda($ronda['id'] ?? null);
+$resultados = obtenerResultadosRonda($ronda_activa['round_id'] ?? null);
 ?>
 <section class="container">
     <div class="row justify-content-center">
@@ -21,7 +21,7 @@ $resultados = obtenerResultadosRonda($ronda['id'] ?? null);
                                     foreach ($resultados as $row) {
                                         echo "<tr>";
                                         echo "<td>" . htmlspecialchars($row['topic']) . "</td>";
-                                        echo "<td>" . htmlspecialchars($row['total_votes']) . "</td>";
+                                        echo "<td>" . htmlspecialchars($row['total_points']) . "</td>"; // Usar total_points en vez de total_votes
                                         echo "</tr>";
                                     }
                                 } else {

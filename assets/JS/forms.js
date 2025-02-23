@@ -123,13 +123,23 @@ function checkDateTimeValidity(startDate, startTime, endDate, endTime) {
 }
 function showHideTopicsOnStageMenu (stage){
     stage.addEventListener('change', function() {
-        var topicsContainer = document.getElementById('topics-container');
-        if (this.value != 'propuestas') {
-            topicsContainer.style.display = 'block';
-            topicsContainer.querySelector('select[name="topics[]"]').setAttribute('required', '');
-        } else {
-            topicsContainer.style.display = 'none';
-            topicsContainer.querySelector('select[name="topics[]"]').removeAttribute('required');
+        var topicsAprobados = document.getElementById('lista-aprobados');
+        var topicsFinalistas = document.getElementById('lista-finalistas');
+        if (this.value == 'clasificatoria') {
+            topicsAprobados.style.display = 'block';
+            topicsAprobados.querySelector('select[name="topics[]"]').setAttribute('required', '');
+            topicsFinalistas.style.display = 'none';
+            topicsFinalistas.querySelector('select[name="topics[]"]').removeAttribute('required');
+        } else if(this.value == 'propuestas') {
+            topicsAprobados.style.display = 'none';
+            topicsAprobados.querySelector('select[name="topics[]"]').removeAttribute('required');
+            topicsFinalistas.style.display = 'none';
+            topicsFinalistas.querySelector('select[name="topics[]"]').removeAttribute('required');
+        }else if(this.value == 'final'){
+            topicsAprobados.style.display = 'none';
+            topicsAprobados.querySelector('select[name="topics[]"]').removeAttribute('required');
+            topicsFinalistas.style.display = 'block';
+            topicsFinalistas.querySelector('select[name="topics[]"]').setAttribute('required', '');
         }
     });
 }

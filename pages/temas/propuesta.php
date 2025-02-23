@@ -15,7 +15,7 @@
                             <label for="description" class="form-label">Descripción</label>
                             <textarea id="description" name="description" class="form-control" rows="4"></textarea>
                         </div>
-                        <button type="submit" class="btn btn-success w-100">Proponer</button>
+                        <button type="submit" class="btn btn-primary w-100">Proponer</button>
                     </form>
                 </div>
             </div>

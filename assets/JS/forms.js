@@ -1,22 +1,59 @@
 addEventListener("DOMContentLoaded", () => {
    
-    /*Validación fecha inicio sea anterior a fecha fin en creación de ronda */
-    if ( document.getElementById('start_date')) {
+    /*Validación fecha y hora inicio sea anterior a fecha y hora fin en creación de ronda */
+    const startDateElement = document.getElementById('start_date');
+    const endDateElement = document.getElementById('end_date');
+    const startTimeElement = document.getElementById('start_time');
+    const endTimeElement = document.getElementById('end_time');
+
+    if (startDateElement) {
         startDateElement.addEventListener('change', function() {
             var startDate = this.value;
             var endDate = endDateElement ? endDateElement.value : null;
-            checkDateValidity(startDate, endDate);
+            var startTime = startTimeElement ? startTimeElement.value : null;
+            var endTime = endTimeElement ? endTimeElement.value : null;
+            checkDateTimeValidity(startDate, startTime, endDate, endTime);
         });
     }
 
-    if (document.getElementById('end_date')) {
+    if (endDateElement) {
         endDateElement.addEventListener('change', function() {
             var endDate = this.value;
             var startDate = startDateElement ? startDateElement.value : null;
-            checkDateValidity(startDate, endDate);
+            var startTime = startTimeElement ? startTimeElement.value : null;
+            var endTime = endTimeElement ? endTimeElement.value : null;
+            checkDateTimeValidity(startDate, startTime, endDate, endTime);
         });
     }
-    
+
+    if (startTimeElement) {
+        startTimeElement.addEventListener('change', function() {
+            var startTime = this.value;
+            var startDate = startDateElement ? startDateElement.value : null;
+            var endDate = endDateElement ? endDateElement.value : null;
+            var endTime = endTimeElement ? endTimeElement.value : null;
+            checkDateTimeValidity(startDate, startTime, endDate, endTime);
+        });
+    }
+
+    if (endTimeElement) {
+        endTimeElement.addEventListener('change', function() {
+            var endTime = this.value;
+            var startDate = startDateElement ? startDateElement.value : null;
+            var endDate = endDateElement ? endDateElement.value : null;
+            var startTime = startTimeElement ? startTimeElement.value : null;
+            checkDateTimeValidity(startDate, startTime, endDate, endTime);
+        });
+    }
+
+     //Activar formulario edicion usuario
+     if (document.getElementById("enableEdit")) {
+        userUpdate(document.getElementById("enableEdit"));
+    }
+    if (document.querySelector('select[name="stage"]')) {
+        showHideTopicsOnStageMenu(document.querySelector('select[name="stage"]'));
+    }
+   
     /*Validación de correo */
     document.querySelectorAll("[name='email']").forEach(emailInput => {
         emailInput.addEventListener("change", function () {
@@ -73,10 +110,55 @@ function validEmailPattern(email) {
     }
 }
 
-function checkDateValidity(startDate, endDate){
-        if (startDate && endDate && new Date(startDate) > new Date(endDate)) {
-            this.setCustomValidity('La fecha de inicio no puede ser posterior a la fecha de fin.');
+function checkDateTimeValidity(startDate, startTime, endDate, endTime) {
+    if (startDate && endDate) {
+        const startDateTime = new Date(`${startDate}T${startTime || '00:00'}`);
+        const endDateTime = new Date(`${endDate}T${endTime || '00:00'}`);
+        if (startDateTime > endDateTime) {
+            startDateElement.setCustomValidity('La fecha y hora de inicio no puede ser posterior a la fecha y hora de fin.');
         } else {
-            this.setCustomValidity('');
+            startDateElement.setCustomValidity('');
         }
+    }
+}
+function showHideTopicsOnStageMenu (stage){
+    stage.addEventListener('change', function() {
+        var topicsAprobados = document.getElementById('lista-aprobados');
+        var topicsFinalistas = document.getElementById('lista-finalistas');
+        if (this.value == 'clasificatoria') {
+            topicsAprobados.style.display = 'block';
+            topicsAprobados.querySelector('select[name="topics[]"]').setAttribute('required', '');
+            topicsFinalistas.style.display = 'none';
+            topicsFinalistas.querySelector('select[name="topics[]"]').removeAttribute('required');
+        } else if(this.value == 'propuestas') {
+            topicsAprobados.style.display = 'none';
+            topicsAprobados.querySelector('select[name="topics[]"]').removeAttribute('required');
+            topicsFinalistas.style.display = 'none';
+            topicsFinalistas.querySelector('select[name="topics[]"]').removeAttribute('required');
+        }else if(this.value == 'final'){
+            topicsAprobados.style.display = 'none';
+            topicsAprobados.querySelector('select[name="topics[]"]').removeAttribute('required');
+            topicsFinalistas.style.display = 'block';
+            topicsFinalistas.querySelector('select[name="topics[]"]').setAttribute('required', '');
+        }
+    });
+}
+
+/* actualizar datos usuario */
+function userUpdate(element){
+    element.addEventListener("change", function() {
+    let isEnabled = this.checked;
+
+    document.getElementById("name").disabled = !isEnabled;
+    document.getElementById("email").disabled = !isEnabled;
+    document.getElementById("password").disabled = !isEnabled;
+    document.getElementById("user_save").disabled = !isEnabled;
+    document.getElementById("user_delete").disabled = !isEnabled;
+});
+
+}
+
+function activarEliminar(){
+    document.getElementById("deleteAll").toggleAttribute("disabled");
+
 }

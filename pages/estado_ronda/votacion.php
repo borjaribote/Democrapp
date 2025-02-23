@@ -15,9 +15,12 @@
     </div>
 </div>
 <?php  $temas = obtenerTemasRondaActiva(); ?>
-    <form id="voteForm" action="guardar_voto.php" method="POST">
-    <input type="hidden" name="user_id" value="<?php $_SESSION['user_id'] ?>" >
-    <input type="hidden" name="round_id" value="<?php $ronda_activa['round_id'] ?>" >
+    <form id="voteForm" action="<?= BASE_URL ?>controllers/controlador_votos.php" method="POST">
+    <input type="hidden" name="user_id" value="<?php echo $_SESSION['user_id'] ?>" >
+    <input type="hidden" name="round_id" value="<?php echo $ronda_activa['round_id'] ?>" >
+    <input type="hidden" name="token-3" value="">
+    <input type="hidden" name="token-2" value="">
+    <input type="hidden" name="token-1" value="">
         <div class="row" id="topicsContainer">
             <?php foreach ($temas as $tema) {
                     ?><div class='col-md-4 mb-3'>
@@ -47,7 +50,7 @@
             ?>
         </div>
         <div class="text-center mt-4">
-            <button type="submit" class="btn btn-success" disabled id="submitVote">Guardar Votación</button>
+            <button type="submit" class="btn btn-primary" disabled id="submitVote">Guardar Votación</button>
         </div>
     </form>
 </div>

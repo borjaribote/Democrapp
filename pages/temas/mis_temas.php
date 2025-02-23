@@ -20,7 +20,6 @@ require_once BASE_PATH.'/controllers/controlador_temas.php';
                                 <th>Tema</th>
                                 <th>Estado</th>
                                 <th>Fase</th>
-                                <th>Votos</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -30,27 +29,8 @@ require_once BASE_PATH.'/controllers/controlador_temas.php';
                                         <td><?php echo htmlspecialchars($row['topic']); ?></td>
                                         <td><?php echo htmlspecialchars($row['estado_tema']); ?></td>
                                         <td>
-                                            <?php 
-                                            switch ($row['stage']) {
-                                                case 'proposals':
-                                                    echo 'Propuestas';
-                                                    break;
-                                                case 'qualifying':
-                                                    echo 'Clasificación';
-                                                    break;
-                                                case 'tiebreaker':
-                                                    echo 'Desempate';
-                                                    break;
-                                                case 'final':
-                                                    echo 'Final';
-                                                    break;
-                                                default:
-                                                    echo 'Sin fase';
-                                                    break;
-                                            }
-                                            ?>
+                                            <?php echo $row['stage']?>
                                         </td>
-                                        <td><?php echo htmlspecialchars($row['total_votes'] ?? 0); ?></td>
                                     </tr>
                                 <?php } else: ?>
                                 <tr>

@@ -16,10 +16,16 @@ $activeTab = isset($_COOKIE["temas_tab"]) ? json_decode($_COOKIE["temas_tab"], t
             <a class="nav-link <?= ($activeTab == 'aprobar') ? 'active' : '' ?>" id="aprobar-tab" data-bs-toggle="tab" href="#aprobar"><i class="fa-solid fa-check"></i> Aprobar temas</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link <?= ($activeTab == 'aprobados') ? 'active' : '' ?>" id="aprobados-tab" data-bs-toggle="tab" href="#aprobados"><i class="fa fa-thumbs-up" aria-hidden="true"></i>            </i> Temas aprobados</a>
+            <a class="nav-link <?= ($activeTab == 'aprobados') ? 'active' : '' ?>" id="aprobados-tab" data-bs-toggle="tab" href="#aprobados"><i class="fa fa-thumbs-up" aria-hidden="true"></i></i>Temas por clasificar</a>
         </li>
         <li class="nav-item">
             <a class="nav-link <?= ($activeTab == 'clasificados') ? 'active' : '' ?>" id="clasificados-tab" data-bs-toggle="tab" href="#clasificados"><i class="fa-solid fa-trophy"></i> Temas clasificados</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link <?= ($activeTab == 'noclasificados') ? 'active' : '' ?>" id="noclasificados-tab" data-bs-toggle="tab" href="#noclasificados"><i class="fa-solid fa-xmark"></i>Temas no clasificados</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link <?= ($activeTab == 'borrar') ? 'active' : '' ?>" id="borrar-tab" data-bs-toggle="tab" href="#borrar"><i class="fa-solid fa-trash-can"></i> Borrar temas</a>
         </li>
     </ul>
 
@@ -40,7 +46,51 @@ $activeTab = isset($_COOKIE["temas_tab"]) ? json_decode($_COOKIE["temas_tab"], t
         <div class="tab-pane fade <?= ($activeTab == 'clasificados') ? 'active show' : '' ?>" id="clasificados">
             <?php include BASE_PATH.'pages/temas/clasificados.php'; ?> 
         </div>
+        <!-- 🔹 Pestaña: Temas noclasificados -->
+        <div class="tab-pane fade <?= ($activeTab == 'noclasificados') ? 'active show' : '' ?>" id="noclasificados">
+            <?php include BASE_PATH.'pages/temas/noclasificados.php'; ?> 
+        </div>
+        <!-- 🔹 Pestaña: Borrar todos los temas  -->
+        <div class="tab-pane fade <?= ($activeTab == 'borrar') ? 'active show' : '' ?>" id="borrar">
+            <?php include BASE_PATH.'pages/temas/borrar.php'; ?> 
+        </div>
     </div>
 </section>
+
+
+<div class="modal fade" id="viewTopicInfo" tabindex="-1" aria-labelledby="temaModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-3">
+            <div class="modal-header border-bottom-0 pb-2">
+                <h5 class="modal-title fw-semibold text-dark" id="temaModalLabel">Detalles del Tema</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body px-4 pb-4">
+                <div class="mb-3">
+                    <h6 class="text-muted mb-1">Título</h6>
+                    <p class="fw-semibold text-dark" id="topicTitle"></p>
+                </div>
+                <div class="mb-3">
+                    <h6 class="text-muted mb-1">Fecha de Creación</h6>
+                    <p class="text-dark" id="topicCreatedAt"></p>
+                </div>
+                <div class="mb-3">
+                    <h6 class="text-muted mb-1">Tema</h6>
+                    <p class="text-dark" id="topicTopic"></p>
+                </div>
+                <div class="mb-3">
+                    <h6 class="text-muted mb-1">Descripción</h6>
+                    <p class="text-dark" id="topicDescription"></p>
+                </div>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-dark px-4 py-2 rounded-pill" data-bs-dismiss="modal">
+                    Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <?php
  require_once BASE_PATH.'/includes/footer.php'; ?>

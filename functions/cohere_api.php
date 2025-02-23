@@ -54,7 +54,12 @@ function generarTituloGlobalCohere($tema) {
     $titulo = isset($resultado["text"]) ? trim($resultado["text"]) : null;
 
     $titulo = str_replace(["Título Global: ", "Título Global:"], "", $titulo);
-    $titulo = trim($titulo); 
+    
+    $titulo = trim($titulo, '"');
+
+if (empty($titulo)) {
+    return "⚠️ Error: La IA no generó un título válido.";
+}
 
     if (empty($titulo)) {
         return "Error: La IA no generó un título válido.";

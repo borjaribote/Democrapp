@@ -59,9 +59,6 @@ function insertarRonda($data) {
     }
 }
 
-
-
-
 /**
  * Página: Rondas Ventana: Gestionar rondas
  *  Actualizar 
@@ -144,7 +141,6 @@ function obtenerRondasConTemas() {
 
     return $rondas;
 }
-
 
 /*Página: Index */
 function obtenerRondaActiva() {
@@ -241,6 +237,46 @@ function obtenerUltimaRondaActiva() {
     $stmt->execute();
     $result = $stmt->get_result();
     return $result->fetch_assoc() ?: null;
+}
+
+/**Página crear ronda */
+/*Página: Rondas Ventana:Crear ronda Fase: Clasificación */
+function consultarTemasPorClasificarse() {
+    global $conexion;
+    
+    $order_by = "created_at DESC"; 
+    $sql = "SELECT * FROM topics WHERE is_approved = TRUE AND disqualified = FALSE AND finalist = FALSE ORDER BY $order_by";
+    $result = $conexion->query($sql);
+    
+    $temas = [];
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $temas[] = $row;
+        }
+    }
+
+    return $temas; 
+}
+/*Página: Rondas Ventana: Crear */
+function temasClasificados() {
+    global $conexion;
+
+    $sql = "SELECT t.id, t.topic, t.description, 
+                   COALESCE(SUM(v.value), 0) AS total_puntos,
+                   COUNT(v.id) AS total_votos
+            FROM topics t
+            LEFT JOIN votes v ON t.id = v.topic_id
+            WHERE t.finalist = 1
+            GROUP BY t.id, t.topic, t.description";
+
+    $result = $conexion->query($sql);
+
+    $temas = [];
+    while ($row = $result->fetch_assoc()) {
+        $temas[] = $row;
+    }
+
+    return $temas;
 }
 
 ?>

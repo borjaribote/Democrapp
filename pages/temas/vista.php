@@ -16,11 +16,13 @@ $activeTab = isset($_COOKIE["temas_tab"]) ? json_decode($_COOKIE["temas_tab"], t
             <a class="nav-link <?= ($activeTab == 'aprobar') ? 'active' : '' ?>" id="aprobar-tab" data-bs-toggle="tab" href="#aprobar"><i class="fa-solid fa-check"></i> Aprobar temas</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link <?= ($activeTab == 'aprobados') ? 'active' : '' ?>" id="aprobados-tab" data-bs-toggle="tab" href="#aprobados"><i class="fa fa-thumbs-up" aria-hidden="true"></i>            </i> Temas aprobados</a>
+            <a class="nav-link <?= ($activeTab == 'aprobados') ? 'active' : '' ?>" id="aprobados-tab" data-bs-toggle="tab" href="#aprobados"><i class="fa fa-thumbs-up" aria-hidden="true"></i></i>Temas por clasificar</a>
         </li>
-
         <li class="nav-item">
             <a class="nav-link <?= ($activeTab == 'clasificados') ? 'active' : '' ?>" id="clasificados-tab" data-bs-toggle="tab" href="#clasificados"><i class="fa-solid fa-trophy"></i> Temas clasificados</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link <?= ($activeTab == 'noclasificados') ? 'active' : '' ?>" id="noclasificados-tab" data-bs-toggle="tab" href="#noclasificados"><i class="fa-solid fa-xmark"></i>Temas no clasificados</a>
         </li>
         <li class="nav-item">
             <a class="nav-link <?= ($activeTab == 'borrar') ? 'active' : '' ?>" id="borrar-tab" data-bs-toggle="tab" href="#borrar"><i class="fa-solid fa-trash-can"></i> Borrar temas</a>
@@ -44,11 +46,13 @@ $activeTab = isset($_COOKIE["temas_tab"]) ? json_decode($_COOKIE["temas_tab"], t
         <div class="tab-pane fade <?= ($activeTab == 'clasificados') ? 'active show' : '' ?>" id="clasificados">
             <?php include BASE_PATH.'pages/temas/clasificados.php'; ?> 
         </div>
+        <!-- 🔹 Pestaña: Temas noclasificados -->
+        <div class="tab-pane fade <?= ($activeTab == 'noclasificados') ? 'active show' : '' ?>" id="noclasificados">
+            <?php include BASE_PATH.'pages/temas/noclasificados.php'; ?> 
+        </div>
         <!-- 🔹 Pestaña: Borrar todos los temas  -->
         <div class="tab-pane fade <?= ($activeTab == 'borrar') ? 'active show' : '' ?>" id="borrar">
-            <div class="tab-pane fade <?= ($activeTab == 'borrar') ? 'active show' : '' ?>" id="borrar">
-                <?php include BASE_PATH.'pages/temas/borrar.php'; ?> 
-            </div>
+            <?php include BASE_PATH.'pages/temas/borrar.php'; ?> 
         </div>
     </div>
 </section>

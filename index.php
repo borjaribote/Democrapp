@@ -8,8 +8,8 @@ require_once BASE_PATH.'/controllers/controlador_votos.php';
 
 if (isset($_SESSION['user_id'])) { 
     $temas_clasificados = null;
+    $ultimaVotacion = null;
     $ronda_activa = obtenerRondaActiva();
-/* Esto no está hecho */
     $winner = obtenerGanador();
 /* ********************************************************** */
 
@@ -42,7 +42,7 @@ if (isset($_SESSION['user_id'])) {
                         }                                                  
                     } else if (!empty($winner)) {          
                         include BASE_PATH . "pages/estado_ronda/winner.php";
-                        include  BASE_PATH . "pages/estado_ronda/clasificados.php";                  
+                        include  BASE_PATH . "pages/estado_ronda/resultados.php";                  
                     }  else if ($temas_clasificados) {
                         ?>
                          <h2 class="card-title text-success">¡Temas clasificados para la final!</h2>

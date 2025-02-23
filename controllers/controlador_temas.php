@@ -333,20 +333,63 @@ function temasClasificados() {
 function obtenerGanador() {
     global $conexion;
 
-    $sql = "SELECT id, topic, description 
-            FROM topics 
-            WHERE winner = TRUE";
+    // Obtener la última ronda final con ganadores
+    $sql_ronda_final = "SELECT id FROM rounds WHERE stage = 'final' AND status = 'finished' ORDER BY end_date DESC LIMIT 1";
+    $stmt_ronda = $conexion->prepare($sql_ronda_final);
+    $stmt_ronda->execute();
+    $result_ronda = $stmt_ronda->get_result();
+    $ronda_final = $result_ronda->fetch_assoc();
 
-    $stmt = $conexion->prepare($sql);
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    $ganadores = [];
-    while ($row = $result->fetch_assoc()) {
-        $ganadores[] = $row;
+    if (!$ronda_final) {
+        return []; // No hay rondas finales finalizadas
     }
 
-    return $ganadores;
+    $round_id = $ronda_final['id'];
+
+    // Obtener los ganadores de la ronda final con sus votos y puntos de esa ronda
+    $sql_final = "SELECT 
+                    t.id, 
+                    t.topic, 
+                    t.description, 
+                    COUNT(v.id) AS votos_final, 
+                    SUM(v.value) AS puntos_final
+                FROM topics t
+                LEFT JOIN votes v ON t.id = v.topic_id
+                WHERE t.winner = TRUE AND v.round_id = ?
+                GROUP BY t.id, t.topic, t.description";
+
+    $stmt_final = $conexion->prepare($sql_final);
+    $stmt_final->bind_param("i", $round_id);
+    $stmt_final->execute();
+    $result_final = $stmt_final->get_result();
+
+    $ganadores_final = [];
+    while ($row = $result_final->fetch_assoc()) {
+        $ganadores_final[$row['id']] = $row;
+    }
+
+    // Obtener el total de votos y puntos de todas las rondas (incluyendo la final)
+    $ganadores_totales = [];
+    foreach ($ganadores_final as $id => $ganador) {
+        $sql_total = "SELECT 
+                        COUNT(v.id) AS votos_totales, 
+                        SUM(v.value) AS puntos_totales
+                    FROM votes v
+                    WHERE v.topic_id = ?";
+
+        $stmt_total = $conexion->prepare($sql_total);
+        $stmt_total->bind_param("i", $id);
+        $stmt_total->execute();
+        $result_total = $stmt_total->get_result();
+        $totales = $result_total->fetch_assoc();
+
+        // Agregar los valores totales al ganador
+        $ganadores_final[$id]['votos_totales'] = $totales['votos_totales'];
+        $ganadores_final[$id]['puntos_totales'] = $totales['puntos_totales'];
+    }
+
+    return $ganadores_final;
 }
+
 
 ?>

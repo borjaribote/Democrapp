@@ -164,7 +164,6 @@ BEGIN
     END IF;
 END$$
 
-
 -- TRIGGER 3: Selección del Ganador en la Final
 CREATE TRIGGER after_round_final
 AFTER UPDATE ON rounds
@@ -185,6 +184,17 @@ BEGIN
         );
     END IF;
 END$$
+
+-- TRIGGER 4: Cambiar end_date de la última ronda
+CREATE TRIGGER actualizar_end_date
+BEFORE UPDATE ON rounds
+FOR EACH ROW
+BEGIN
+    -- Si la ronda se está marcando como 'finished' y no lo estaba antes
+    IF NEW.status = 'finished' AND OLD.status != 'finished' THEN
+        SET NEW.end_date = NOW();
+    END IF;
+END $$
 
 DELIMITER ;
 

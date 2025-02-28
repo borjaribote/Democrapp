@@ -46,6 +46,26 @@ body .btn-primary{
 .navbar-text{
     text-decoration: none;
 }
+@media (max-width: 768px) {
+.dropdown-menu{
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+}
+}
+.dropdown-menu[data-bs-popper] {
+    top: 95% !important;
+}
+.dropdown-item  {
+    color: #ffffff8c !important;
+}
+.dropdown-item:hover,
+.dropdown-item:focus,
+.dropdown-item:active  {
+    background-color: white !important;
+    color: #212529 !important;
+}
+.nav-link.dropdown-toggle.show{
+    text-align: center !important;
+}
 .greek{
     font-family: 'Greek' !important;
     font-size: 1.5em;

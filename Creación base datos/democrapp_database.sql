@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS rounds (
     start_date DATETIME,
     end_date DATETIME,
     status ENUM('active', 'inactive', 'finished') DEFAULT 'inactive',
-    topics_per_round INT DEFAULT 10,
+  --  topics_per_round INT DEFAULT 10,
     votes_per_user INT DEFAULT 3,
     final_round BOOLEAN DEFAULT FALSE
 ) CHARACTER SET utf8 COLLATE utf8_bin;

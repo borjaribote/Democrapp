@@ -53,7 +53,10 @@ addEventListener("DOMContentLoaded", () => {
     if (document.querySelector('select[name="stage"]')) {
         showHideTopicsOnStageMenu(document.querySelector('select[name="stage"]'));
     }
-   
+    if (document.getElementById("programarCheckbox")) {
+        showHideProgramming(document.getElementById("programarCheckbox"));
+    }
+    
     /*Validación de correo */
     document.querySelectorAll("[name='email']").forEach(emailInput => {
         emailInput.addEventListener("change", function () {
@@ -120,6 +123,21 @@ function checkDateTimeValidity(startDate, startTime, endDate, endTime) {
             startDateElement.setCustomValidity('');
         }
     }
+}
+function showHideProgramming(checkbox){
+    document.getElementById("programarCheckbox").addEventListener("change", function() {
+
+          document.getElementById("start_date").disabled = !enableFields;
+        document.getElementById("start_time").disabled = !enableFields;
+        document.getElementById("end_date").disabled = !enableFields;
+        document.getElementById("end_time").disabled = !enableFields; 
+        const programacionElement = document.getElementById("programacion");
+        if (checkbox.checked) {
+            programacionElement.style.display = "block";
+        } else {
+            programacionElement.style.display = "none";
+        }
+    });
 }
 function showHideTopicsOnStageMenu (stage){
     stage.addEventListener('change', function() {

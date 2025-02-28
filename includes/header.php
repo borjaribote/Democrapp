@@ -23,47 +23,56 @@ if (!defined('INIT_LOADED')) {
 </head>
 <body class="d-flex flex-column min-vh-100">
     <!-- Barra de navegación -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand greek" href="<?= BASE_URL ?>index.php">DemocrApp</a>
-            
-            <div class="collapse navbar-collapse">
-                <ul class="navbar-nav me-auto">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-4 py-lg-2">
+    <div class="container">
+        <a class="navbar-brand greek" href="<?= BASE_URL ?>index.php">DemocrApp</a>
+        <!-- Botón hamburguesa -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" 
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <!-- Menú colapsable -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto align-items-center">
+                <li class="nav-item">
+                    <a class="nav-link" href="<?= BASE_URL ?>index.php">Inicio</a>
+                </li>
+                <?php if(isset($_SESSION['user_id'])): ?>
                     <li class="nav-item">
-                        <a class="nav-link" href="<?= BASE_URL ?>index.php">Inicio</a>
+                        <a class="nav-link" href="<?= BASE_URL ?>pages/temas/mis_temas.php">Mis temas</a>
                     </li>
-                    <?php if(isset($_SESSION['user_id'])): ?>
-                        <li class="nav-item">
-                            <a class="nav-link" href="<?= BASE_URL ?>pages/temas/mis_temas.php">Mis temas</a>
-                        </li>
-                        
-                    <?php endif; ?>
-                    <?php if(isset($_SESSION['is_admin'])): ?>
+                <?php endif; ?>
+                <?php if(isset($_SESSION['is_admin'])): ?>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Admin
                         </a>
-                        <ul class="dropdown-menu" aria-labelledby="adminDropdown">
+                        <ul class="dropdown-menu bg-dark" aria-labelledby="adminDropdown">
                             <li><a class="dropdown-item" href="<?= BASE_URL ?>pages/temas/vista.php">Administrar temas</a></li>
                             <li><a class="dropdown-item" href="<?= BASE_URL ?>pages/rondas/vista.php">Administrar rondas</a></li>
                             <li><a class="dropdown-item" href="<?= BASE_URL ?>pages/usuarios/administrar.php">Administrar usuarios</a></li>
-                       </ul>
+                        </ul>
                     </li>
-                    <?php endif; ?>
-                </ul>
-                <div class="d-flex">
-                    <?php if(isset($_SESSION['user_id'])): ?>
-                        <div class="d-flex align-items-end">
-                            <a class="navbar-text me-3" href="<?= BASE_URL ?>pages/usuarios/micuenta.php"><span class="navbar-text"><?= $_SESSION['user_name'] ?></span>
-                            <i class="fa-solid fa-user"></i></a>
-                        </div>
-                        <a href="<?= BASE_URL ?>functions/user_auth.php" class="btn btn-danger">Cerrar sesión</a>
-                    <?php else: ?>
-                        <a href="<?= BASE_URL ?>index.php" class="btn btn-primary me-2">Login</a>
-                        <a href="<?= BASE_URL ?>pages/usuarios/registro.php" class="btn btn-success">Registrarse</a>
-                    <?php endif; ?>
-                </div>
+                <?php endif; ?>
+            </ul>
+            <div class="Col-12">
+                <?php if(isset($_SESSION['user_id'])): ?>
+                    <div class="d-flex flex-column flex-xl-row align-items-xl-end  align-items-center">
+                        <a href="<?= BASE_URL ?>functions/user_auth.php" class="btn btn-danger order-2 order-xl-1">Cerrar sesión</a>
+                        <a class="navbar-text ms-xl-3 ms-0 order-xl-2 order-1" href="<?= BASE_URL ?>pages/usuarios/micuenta.php">
+                            <i class="fa-solid fa-user"></i>
+                            <span class="navbar-text"><?= $_SESSION['user_email']; ?></span>
+<!--                             <span class="navbar-text">Cuenta</span>
+ -->                            
+                        </a>
+                    </div>
+                <?php else: ?>
+                    <a href="<?= BASE_URL ?>index.php" class="btn btn-primary me-2">Login</a>
+                    <a href="<?= BASE_URL ?>pages/usuarios/registro.php" class="btn btn-success">Registrarse</a>
+                <?php endif; ?>
             </div>
         </div>
-    </nav>
+    </div>
+</nav>
+
     

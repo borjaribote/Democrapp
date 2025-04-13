@@ -10,12 +10,9 @@ $rondas = obtenerRondasConTemas(); // Obtener todas las rondas
                 <tr>
                     <th>Fase</th>
                     <th>Temas incluidos</th>
-                    <th>Fecha inicio</th>
-                    <th>Hora inicio</th>
-                    <th>Fecha fin</th>
-                    <th>Hora fin</th>
+                    <th>Programación</th>
                     <th>Estado actual</th>
-                    <th>Acción</th>
+                    <th >Acción</th>
                 </tr>
             </thead>
             <tbody>
@@ -40,7 +37,7 @@ $rondas = obtenerRondasConTemas(); // Obtener todas las rondas
                                                 <?php if (!empty($ronda['temas']) && is_array($ronda['temas'])): ?>
                                                     <?php foreach ($ronda['temas'] as $tema): ?>
                                                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                                                            <span><?= htmlspecialchars($tema['topic']); ?></span> 
+                                                            <span><?= htmlspecialchars($tema['topic']); ?> 
                                                             <span class="badge bg-primary"><?= $tema['total_puntos'] ?> votos</span>
                                                         </li>
                                                     <?php endforeach; ?>
@@ -56,11 +53,67 @@ $rondas = obtenerRondasConTemas(); // Obtener todas las rondas
                                 </div>
                             </div>
                         </td>
+                        <td>
+                    <?php
+                    if ($ronda['start_date'] === "00-00-0000"){
+                      
+                            echo "no existe";
+                    }else{
+                        ?>
+                        <button type="button" class="btn  btn-outline-dark btn-sm" data-bs-toggle="modal" data-bs-target="#programacionModal<?= $ronda['id']; ?>">
+                                Mostrar
+                            </button>
 
-                        <td><?= htmlspecialchars($ronda['start_date']); ?></td>
-                        <td><?= htmlspecialchars($ronda['start_time']); ?></td>
-                        <td><?= htmlspecialchars($ronda['end_date']); ?></td>
-                        <td><?= htmlspecialchars($ronda['end_time']); ?></td>
+                            <!-- Modal de Actualización -->
+                            <div class="modal fade" id="programacionModal<?= $ronda['id']; ?>" tabindex="-1" aria-labelledby="programacionLabel<?= $ronda['id']; ?>" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content p-4">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Detalles de la Programación</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="card border-secondary">
+                                        <div class="card-body">
+                                            <div class="row text-center">
+                                                <div class="col-md-6">
+                                                    <h6 class="card-title">Inicio</h6>
+                                                    <p class="mb-1">
+                                                    <i class="bi bi-calendar"></i>
+                                                    <?= isset($ronda['start_date']) ? date('d/m/Y', strtotime($ronda['start_date'])) : 'N/A'; ?>
+                                                    </p>
+                                                    <p class="mb-0">
+                                                    <i class="bi bi-clock"></i>
+                                                    <?= htmlspecialchars($ronda['start_time']); ?>
+                                                    </p>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <h6 class="card-title">Fin</h6>
+                                                    <p class="mb-1">
+                                                    <i class="bi bi-calendar"></i>
+                                                    <?= isset($ronda['end_date']) ? date('d/m/Y', strtotime($ronda['end_date'])) : 'N/A'; ?>
+                                                    </p>
+                                                    <p class="mb-0">
+                                                    <i class="bi bi-clock"></i>
+                                                    <?= htmlspecialchars($ronda['end_time']); ?>
+                                                    </p>
+                                                </div>  
+                                            </div>
+                                        </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                    </div>
+                                    </div>
+                                </div>
+                                </div>
+
+                        <?php
+                       
+                    }
+                    ?>
+         </td>
                         <td><span class="badge bg-<?= $ronda['status'] == 'active' ? 'success' : ($ronda['status'] == 'inactive' ? 'warning' : 'danger') ?>">
                             <?= ucfirst($ronda['status']); ?>
                         </span></td>

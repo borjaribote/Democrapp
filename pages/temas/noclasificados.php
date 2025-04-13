@@ -31,11 +31,6 @@ $created_icon = ($current_order === 'created_at') ? ($new_direction === "ASC" ? 
         <table class="table table-bordered table-striped table-hover">
         <thead class="thead-dark">
             <tr>
-                <th class="<?= ($current_order === 'title') ? 'sorted-column' : '' ?>">
-                    <a href="?order=title&direction=<?= $new_direction ?>" class="text-decoration-none text-dark">
-                        Título <?php if ($title_icon) : ?><i class="fa <?= $title_icon ?>"></i><?php endif; ?>
-                    </a>
-                </th>
                 <th class="<?= ($current_order === 'topic') ? 'sorted-column' : '' ?>">
                     <a href="?order=topic&direction=<?= $new_direction ?>" class="text-decoration-none text-dark">
                         Tema <?php if ($topic_icon) : ?><i class="fa <?= $topic_icon ?>"></i><?php endif; ?>
@@ -54,7 +49,6 @@ $created_icon = ($current_order === 'created_at') ? ($new_direction === "ASC" ? 
         <tbody>
             <?php foreach ($result as $row): ?>
                 <tr>
-                    <td><?php echo htmlspecialchars($row['title']); ?></td>
                     <td><?php echo htmlspecialchars($row['topic']); ?></td>
                     <td><?php echo date("Y-m-d", strtotime($row['created_at'])); ?></td>
                     <td><button type="button" class="btn btn-secondary btn-sm" 

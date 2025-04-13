@@ -21,9 +21,9 @@ function accesoAutorizado($tipo='usuario') {
 
     if ($tipo === 'admin' && !$is_admin) {
         // Si la página requiere admin y el usuario no es admin
-        header("Location: ../pages/404.php");
+        header("Location: ../404.php");
         exit();
     }
-}
+}   
 
 ?>

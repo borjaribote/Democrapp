@@ -62,7 +62,7 @@ function insertarRonda($data) {
 /**
  * Página: Rondas Ventana: Gestionar rondas
  *  Actualizar 
- */
+ */ 
 function actualizarRonda($data) {
     global $conexion;
 
@@ -87,7 +87,7 @@ function actualizarRonda($data) {
     } else {
         echo "Error al actualizar la ronda.";
     }
-}
+} 
 
 /* Página: Rondas Ventana: Gestionar rondas */
 function eliminarRonda($id) {

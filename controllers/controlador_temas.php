@@ -131,14 +131,27 @@ function consultarDatosTemas($id) {
     global $conexion;
 
     $sql = "SELECT 
-                t.id, 
-                t.topic, 
-                t.is_approved, 
+                *,
                 CASE 
                     WHEN t.is_approved = 1 THEN 'Aprobado'
-                    WHEN t.is_approved = 0 THEN 'Pendiente'
+                    WHEN t.finalist = 0 THEN 'Pendiente'
                     ELSE 'Desconocido'
                 END AS estado_tema, 
+                CASE 
+                    WHEN t.disqualified = 1 THEN 'true'
+                    WHEN t.disqualified = 0 THEN 'false'
+                    ELSE 'Desconocido'
+                END AS descalificado, 
+                CASE 
+                    WHEN t.finalist = 1 THEN 'true'
+                    WHEN t.finalist = 0 THEN 'false'
+                    ELSE 'Desconocido'
+                END AS finalista, 
+                CASE 
+                    WHEN t.winner = 1 THEN 'true'
+                    WHEN t.winner = 0 THEN 'false'
+                    ELSE 'Desconocido'
+                END AS ganador, 
                 IFNULL(
                     (SELECT GROUP_CONCAT(DISTINCT r.stage SEPARATOR ', ') 
                      FROM topic_rounds tr 

@@ -53,7 +53,10 @@ addEventListener("DOMContentLoaded", () => {
     if (document.querySelector('select[name="stage"]')) {
         showHideTopicsOnStageMenu(document.querySelector('select[name="stage"]'));
     }
-   
+    if (document.getElementById("programarCheckbox")) {
+        showHideProgramming(document.getElementById("programarCheckbox"));
+    }
+    
     /*Validación de correo */
     document.querySelectorAll("[name='email']").forEach(emailInput => {
         emailInput.addEventListener("change", function () {
@@ -120,6 +123,30 @@ function checkDateTimeValidity(startDate, startTime, endDate, endTime) {
             startDateElement.setCustomValidity('');
         }
     }
+}
+function showHideProgramming(checkbox){
+    document.getElementById("programarCheckbox").addEventListener("change", function() {
+        let isEnabled = this.checked;
+
+        document.getElementById("start_date");
+        document.getElementById("start_time");
+        document.getElementById("end_date");
+        document.getElementById("end_time"); 
+        const programacionElement = document.getElementById("programacion");
+        if (checkbox.checked) {
+            programacionElement.style.display = "block";
+            document.getElementById("start_date").disabled = false;
+            document.getElementById("start_time").disabled = false;
+            document.getElementById("end_date").disabled = false;
+            document.getElementById("end_time").disabled = false;            
+        } else {
+            programacionElement.style.display = "none";
+            document.getElementById("start_date").disabled = !isEnabled;
+            document.getElementById("start_time").disabled = !isEnabled;
+            document.getElementById("end_date").disabled = !isEnabled;
+            document.getElementById("end_time").disabled = !isEnabled;
+        }
+    });
 }
 function showHideTopicsOnStageMenu (stage){
     stage.addEventListener('change', function() {

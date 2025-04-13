@@ -51,7 +51,7 @@ if (isset($_SESSION['user_id'])) {
                        } else {
                         ?>
                            <span class="card-title greek">DemocrApp</span>
-                           <p class="text-muted">No hay rondas activas o finalizadas en este momento.</p>
+                           <p class="text-muted">No hay rondas activas en este momento.</p>
                         <?php
                     }
                     ?>

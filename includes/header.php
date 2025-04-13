@@ -58,7 +58,7 @@ if (!defined('INIT_LOADED')) {
             <div class="Col-12">
                 <?php if(isset($_SESSION['user_id'])): ?>
                     <div class="d-flex flex-column flex-xl-row align-items-xl-end  align-items-center">
-                        <a href="<?= BASE_URL ?>functions/user_auth.php" class="btn btn-danger order-2 order-xl-1">Cerrar sesión</a>
+                        <a href="<?= BASE_URL ?>functions/user_auth.php" class="btn btn-danger order-2 order-xl-1 mt-2 mt-lg-0 ">Cerrar sesión</a>
                         <a class="navbar-text ms-xl-3 ms-0 order-xl-2 order-1" href="<?= BASE_URL ?>pages/usuarios/micuenta.php">
                             <i class="fa-solid fa-user"></i>
                             <span class="navbar-text"><?= $_SESSION['user_email']; ?></span>

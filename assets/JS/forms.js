@@ -126,16 +126,25 @@ function checkDateTimeValidity(startDate, startTime, endDate, endTime) {
 }
 function showHideProgramming(checkbox){
     document.getElementById("programarCheckbox").addEventListener("change", function() {
+        let isEnabled = this.checked;
 
-          document.getElementById("start_date").disabled = !enableFields;
-        document.getElementById("start_time").disabled = !enableFields;
-        document.getElementById("end_date").disabled = !enableFields;
-        document.getElementById("end_time").disabled = !enableFields; 
+        document.getElementById("start_date");
+        document.getElementById("start_time");
+        document.getElementById("end_date");
+        document.getElementById("end_time"); 
         const programacionElement = document.getElementById("programacion");
         if (checkbox.checked) {
             programacionElement.style.display = "block";
+            document.getElementById("start_date").disabled = false;
+            document.getElementById("start_time").disabled = false;
+            document.getElementById("end_date").disabled = false;
+            document.getElementById("end_time").disabled = false;            
         } else {
             programacionElement.style.display = "none";
+            document.getElementById("start_date").disabled = !isEnabled;
+            document.getElementById("start_time").disabled = !isEnabled;
+            document.getElementById("end_date").disabled = !isEnabled;
+            document.getElementById("end_time").disabled = !isEnabled;
         }
     });
 }
